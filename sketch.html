@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script defer src="scripts/classes.js" charset="utf-8"></script>
+    <script defer src="scripts/script.js" charset="utf-8"></script>
+    <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+</head>
+<body>
+    <a id="dl" download style="display:none"></a>
+    <svg id="canvas"></svg>
+    <svg id="temp"></svg>
+    <span class="title">Sketch</span>
+
+    <div class="toolbar">
+        <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-icons">menu</i></div>
+        <div class="tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-icons">gradient</i></div>
+
+        <div class="tool active" id="md1" onclick="changeMode(1)" title="Crayon"><i class="material-icons">mode_edit</i></div>
+
+        <div class="tool" id="md2" onclick="changeMode(2)"><i class="material-icons" id="palette">color_lens</i></div>
+
+    </div>
+
+    <div class="zoombar">
+        <div class="pointer" onclick='zoomIn()'><i class="material-icons">add</i></div>
+        <div id="zoomLabel">100%</div>
+        <div class="pointer" onclick='zoomOut(event)'><i class="material-icons">remove</i></div>
+    </div>
+
+    <div id="menuBox">
+        <div class="menu-item" onclick="openSave()">Sauvegarder</div>
+        <div class="menu-item" onclick="openLoad()">Charger</div>
+    </div>
+
+    <div id="saveBox" class="ioBox">
+
+        <div class="closebtn" onclick="openSave()"><i class="material-icons">close</i></div>
+        <div><input class="textbox" type="text" id="filename" name="" value="" placeholder="Nom du fichier"></div><br />
+        <div class="btn" onclick="save();openSave()">Télécharger</div>
+
+
+    </div>
+
+    <div id="loadBox" class="ioBox">
+        <div class="closebtn" onclick="openLoad()"><i class="material-icons">close</i></div>
+        <input class="textbox" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
+        <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
+
+    </div>
+
+    <div class="colorbar" id="colorbar">
+        <div class="color" onclick="changeColor('black')">
+            <i class="material-icons" style="color:black">opacity</i>
+        </div>
+        <div class="color" onclick="changeColor('indianred')">
+            <i class="material-icons" style="color:indianred">opacity</i>
+        </div>
+        <div class="color" onclick="changeColor('darkseagreen')">
+            <i class="material-icons" style="color:darkseagreen">opacity</i>
+        </div>
+        <div class="color" onclick="changeColor('steelblue')">
+            <i class="material-icons" style="color:steelblue">opacity</i>
+        </div>
+    </div>
+
+</body>
+</html>
