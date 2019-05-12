@@ -131,6 +131,7 @@ path:hover{
     padding-top: 8px;
     box-sizing: border-box;
     float: left;
+    user-select: none;
 }
 
 #mover{
