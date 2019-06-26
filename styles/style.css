@@ -36,6 +36,15 @@ path{
 path:hover{
     stroke:grey;
 }
+text {
+    font-family: permanent marker;
+    font-size: 40px;
+    user-select: none;
+}
+text:hover{
+    fill:grey;
+    cursor: default;
+}
 #temp path{
     stroke:grey;
 }
@@ -231,7 +240,7 @@ path:hover{
     color: #ccc;
 }
 input#files.ok::before{
-    content: "Fichier importer";
+    content: "Fichier importé";
     border-color: #4CAF50;
     color: #4CAF50;
 }

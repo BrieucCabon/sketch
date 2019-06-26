@@ -38,3 +38,16 @@ class Mover{
     }
 
 }
+
+
+class Text {
+    constructor(x,y){
+        this.pa = document.createElementNS('http://www.w3.org/2000/svg',"text");
+        this.pa.setAttributeNS(null,"fill",options.color);
+        this.pa.setAttributeNS(null,"x",x);
+        this.pa.setAttributeNS(null,"y",y);
+        // this.pa.onclick = function(e){Path.selectPath(e,this);};
+
+    }
+
+}

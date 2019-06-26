@@ -3,7 +3,7 @@ temp = document.getElementById('temp');
 
 canDraw = isLine = isRect = isCircle = isDelete = false;
 points = [];
-origin = mouse = {};
+origin = mouse = tempTextMouse = {};
 options = {
     color:"#000",
     zoom : 100,
@@ -54,8 +54,8 @@ function midPoint(p1, p2) {
 
 temp.onmousemove = function(e){
 
-    if (!canDraw) return;
     mouse = { x:e.offsetX , y:e.offsetY };
+    if (!canDraw) return;
     var midP;
     if(isLine){
         midP = midPoint(origin, mouse);
@@ -125,7 +125,7 @@ document.body.onmousewheel = function(e){
 
 canvas.onmousemove = function(e){
     if(isDelete){
-        if(e.path[0].nodeName == "path"){
+        if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
             e.path[0].remove();
         }
     }
@@ -134,7 +134,7 @@ canvas.onmousemove = function(e){
 canvas.onmousedown = function(e){
     if(options.mode == 0){
         isDelete = true;
-        if(e.path[0].nodeName == "path"){
+        if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
             e.path[0].remove();
         }
     }
@@ -150,11 +150,35 @@ document.body.onkeydown = function(e){
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
+    // CTRL + Z
     if(e.keyCode == 90 && e.ctrlKey){ canvas.children[canvas.children.length-1].remove(); }
+    // DEL
     if(e.keyCode == 46){
         selection.item.remove();
         selection.mover.remove();
         selection = {item:null,mover:null};
+    }
+    // Type text
+    if(condTextKeyCode(e.keyCode) && !e.ctrlKey && options.mode == 1){
+
+        if(tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y){
+            tempText.innerHTML += e.key;
+        }else{
+            var txt = new Text(mouse.x,(mouse.y+20)).pa;
+
+            tempText = txt;
+            tempTextMouse = mouse;
+
+            txt.innerHTML = e.key;
+            canvas.appendChild(txt);
+        }
+
+    }
+    // Espace
+    if(e.keyCode == 32 && (tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y) && options.mode == 1){
+        tempText.innerHTML += e.key;
+        e.preventDefault();
+        e.stopPropagation();
     }
 };
 
@@ -164,6 +188,12 @@ document.body.onkeyup = function(e){
     if(e.keyCode == 18 && isCircle){ isCircle = false; }
 };
 
+function condTextKeyCode(code){
+    if((code >= 65 && code <= 90) || (code >= 186 && code <= 192) || (code >= 48 && code <= 57) || (code >= 96 && code <= 111)){
+        return true;
+    }
+    return false;
+}
 
 function did(id){
     return document.getElementById(id);
