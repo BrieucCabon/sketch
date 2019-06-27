@@ -17,10 +17,13 @@ selection = {
 
 tempLoad ="";
 
+perfCount = 0;
+
 
 temp.onmousedown = function(e){
     if(e.button == 0 && options.mode == 1){
         canDraw = true;
+        perfCount = 0;
         origin = { x: e.offsetX, y: e.offsetY };
         path = "M"+origin.x+","+origin.y;
         rand1 = Math.floor((Math.random() * 10)-5);
@@ -92,7 +95,7 @@ temp.onmousemove = function(e){
         path = "M"+origin.x+","+midy+" Q"+origin.x+","+origin.y+","+midx+","+origin.y+" Q"+mouse.x+","+origin.y+","+mouse.x+","+midy+" Q"+mouse.x+","+mouse.y+","+midx+","+mouse.y+" Q"+origin.x+","+mouse.y+","+origin.x+","+midy;
         temp.innerHTML = '<path d="'+path+'"/>';
 
-    }else{
+    }else if((perfCount % 3) == 0){
         points.push({x:e.offsetX,y:e.offsetY});
         p1 = origin;
         p2 = points[0];
@@ -105,8 +108,8 @@ temp.onmousemove = function(e){
             p2 = points[i+1];
         }
         temp.innerHTML = '<path d="'+path+'"/>';
-
     }
+    perfCount++;
 
 };
 
