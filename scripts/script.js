@@ -1,7 +1,7 @@
 canvas = document.getElementById('canvas');
 temp = document.getElementById('temp');
 
-canDraw = isLine = isRect = isCircle = isDelete = false;
+canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = false;
 points = [];
 origin = mouse = tempTextMouse = {};
 options = {
@@ -50,8 +50,8 @@ temp.onmouseup = function(e){
 
 function midPoint(p1, p2) {
     return {
-        x: p1.x + (p2.x - p1.x)/2,
-        y: p1.y + (p2.y - p1.y)/2
+        x: Math.round(p1.x + (p2.x - p1.x)/2),
+        y: Math.round(p1.y + (p2.y - p1.y)/2)
     };
 }
 
@@ -60,10 +60,17 @@ temp.onmousemove = function(e){
     mouse = { x:e.offsetX , y:e.offsetY };
     if (!canDraw) return;
     var midP;
+    var tag = "";
+    if(isCapsLock){
+        tag = '<path class="dotted" d="';
+    }else{
+        tag = '<path d="';
+    }
+
     if(isLine){
         midP = midPoint(origin, mouse);
         path = "M"+origin.x+","+origin.y+"Q"+(midP.x+rand1)+","+(midP.y+rand2)+","+mouse.x+","+mouse.y;
-        temp.innerHTML = '<path d="'+path+'"/>';
+        temp.innerHTML = tag+path+'"/>';
 
     }else if(isRect){
         p1 = {x:origin.x,y:origin.y};
@@ -86,14 +93,14 @@ temp.onmousemove = function(e){
         midP = midPoint(p1, p2);
         path += "M"+(p1.x+rand3)+","+(p1.y+rand1)+" Q"+(midP.x+rand2)+","+(midP.y+rand1)+","+p2.x+","+p2.y;
 
-        temp.innerHTML = '<path d="'+path+'"/>';
+        temp.innerHTML = tag+path+'"/>';
 
     }else if(isCircle){
 
         var midx = origin.x +(mouse.x - origin.x)/2;
         var midy = origin.y +(mouse.y - origin.y)/2;
         path = "M"+origin.x+","+midy+" Q"+origin.x+","+origin.y+","+midx+","+origin.y+" Q"+mouse.x+","+origin.y+","+mouse.x+","+midy+" Q"+mouse.x+","+mouse.y+","+midx+","+mouse.y+" Q"+origin.x+","+mouse.y+","+origin.x+","+midy;
-        temp.innerHTML = '<path d="'+path+'"/>';
+        temp.innerHTML = tag+path+'"/>';
 
     }else if((perfCount % 3) == 0){
         points.push({x:e.offsetX,y:e.offsetY});
@@ -107,7 +114,7 @@ temp.onmousemove = function(e){
             p1 = points[i];
             p2 = points[i+1];
         }
-        temp.innerHTML = '<path d="'+path+'"/>';
+        temp.innerHTML = tag+path+'"/>';
     }
     perfCount++;
 
@@ -150,6 +157,11 @@ canvas.onmouseup = function(e){
 }
 
 document.body.onkeydown = function(e){
+    if(e.getModifierState("CapsLock")){
+        isCapsLock = true;
+    }else{
+        isCapsLock = false;
+    }
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
@@ -279,6 +291,7 @@ function load(e){
       did("files").classList.add("ok");
       did("btnLoad").classList.remove("sealbtn");
     };
+    localStorage.removeItem("sk_autosave");
 
 }
 
@@ -319,4 +332,52 @@ function confirmLoad(){
     did('canvas').innerHTML = tempLoad;
     did("btnLoad").classList.add("sealbtn");
     tempLoad = "";
+}
+
+window.addEventListener("unload",autosave);
+
+function autosave(){
+    openMenu(0);
+    var value = did("canvas").innerHTML;
+    if(value != ""){
+        var packValue = compress(value);
+        localStorage.setItem("sk_autosave",packValue);
+    }
+}
+
+function loadAutosave(){
+    openMenu(0);
+    var packValue = localStorage.getItem("sk_autosave");
+
+    if(packValue != null){
+        var value = uncompress(packValue);
+        did("canvas").innerHTML = value;
+    }
+}
+
+
+function compress(value){
+    value = value.replace(/<path/g, "<p");
+    value = value.replace(/<\/path>/g, "</p>");
+    value = value.replace(/stroke=/g, "s=");
+    value = value.replace(/fill=/g, "f=");
+    value = value.replace(/<text/g, "<t");
+    value = value.replace(/<\/text>/g, "</t>");
+    value = value.replace(/steelblue/g, "stb");
+    value = value.replace(/indianred/g, "inr");
+    value = value.replace(/darkseagreen/g, "dsg");
+    return value;
+}
+
+function uncompress(value){
+    value = value.replace(/<p/g, "<path");
+    value = value.replace(/<\/p>/g, "</path>");
+    value = value.replace(/s=/g, "stroke=");
+    value = value.replace(/f=/g, "fill=");
+    value = value.replace(/<t/g, "<text");
+    value = value.replace(/<\/t>/g, "</text>");
+    value = value.replace(/stb/g, "steelblue");
+    value = value.replace(/inr/g, "indianred");
+    value = value.replace(/dsg/g, "darkseagreen");
+    return value;
 }

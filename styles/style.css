@@ -271,3 +271,8 @@ input#files {
     margin-top: 50px;
     margin-bottom:40px;
 }
+
+
+.dotted{
+    stroke-dasharray: 20;
+}
