@@ -204,7 +204,13 @@ document.body.onkeyup = function(e){
 };
 
 function condTextKeyCode(code){
-    if((code >= 65 && code <= 90) || (code >= 186 && code <= 192) || (code >= 48 && code <= 57) || (code >= 96 && code <= 111)){
+    if(
+        (code >= 65 && code <= 90)   ||
+        (code >= 186 && code <= 192) ||
+        (code >= 48 && code <= 57)   ||
+        (code >= 96 && code <= 111)  ||
+        (code >= 219 && code <= 223)
+    ){
         return true;
     }
     return false;
