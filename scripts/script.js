@@ -387,3 +387,18 @@ function uncompress(value){
     value = value.replace(/dsg/g, "darkseagreen");
     return value;
 }
+
+
+function exporter(){
+    var svg = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3840px" height="2160px"><style>@import url("https://fonts.googleapis.com/css?family=Permanent+Marker");path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}text {font-family: permanent marker, impact;font-size: 40px;user-select: none;}</style>'+
+    did('canvas').innerHTML
+    +'</svg>';
+
+
+    var blob = new Blob([svg],{ "type" : "image/svg+xml" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.download = "test.svg";
+    a.href = url;
+    a.click();
+}
