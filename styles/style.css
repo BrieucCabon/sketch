@@ -38,7 +38,7 @@ path:hover{
     stroke:grey;
 }
 text {
-    font-family: permanent marker;
+    font-family: permanent marker, cursive;
     font-size: 40px;
     user-select: none;
 }
