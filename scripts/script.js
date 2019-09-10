@@ -402,6 +402,7 @@ function compress(value){
 
 function uncompress(value){
     if(value.match(/(<<cps>>)/g) != null){
+        value = value.replace(/(<<cps>>)/g, "");
         value = value.replace(/<p/g, "<path");
         value = value.replace(/<\/p>/g, "</path>");
         value = value.replace(/s=/g, "stroke=");
