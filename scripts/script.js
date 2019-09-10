@@ -1,7 +1,7 @@
 canvas = document.getElementById('canvas');
 temp = document.getElementById('temp');
 
-canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = false;
+canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = isStraight = false;
 points = [];
 origin = mouse = tempTextMouse = {};
 options = {
@@ -65,6 +65,13 @@ temp.onmousemove = function(e){
         tag = '<path class="dotted" d="';
     }else{
         tag = '<path d="';
+    }
+
+    if(isStraight){
+        rand1 = 0;
+        rand2 = 0;
+        rand3 = 0;
+        rand4 = 0;
     }
 
     if(isLine){
@@ -159,9 +166,20 @@ canvas.onmouseup = function(e){
 document.body.onkeydown = function(e){
     if(e.getModifierState("CapsLock")){
         isCapsLock = true;
+        did("dashLogo").style.display = "inline-block";
     }else{
         isCapsLock = false;
+        did("dashLogo").style.display = "none";
     }
+
+    if(e.keyCode == 222 && isStraight){
+        isStraight = false;
+        did("straightLogo").style.display = "none";
+    }else if(e.keyCode == 222 && !isStraight){
+        isStraight = true;
+        did("straightLogo").style.display = "inline-block";
+    }
+
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
@@ -209,7 +227,8 @@ function condTextKeyCode(code){
         (code >= 186 && code <= 192) ||
         (code >= 48 && code <= 57)   ||
         (code >= 96 && code <= 111)  ||
-        (code >= 219 && code <= 223)
+        (code >= 219 && code <= 221) ||
+        code == 223
     ){
         return true;
     }
@@ -280,11 +299,16 @@ function changeColor(col){
 
 
 function save(){
-    var blob = new Blob([did('canvas').innerHTML],{ "type" : "text/xml" });
-    var url = URL.createObjectURL(blob);
-    did('dl').download = did("filename").value+".skt";
-    did('dl').href = url;
-    did('dl').click();
+    if(document.getElementsByName("savetype")[0].checked){
+        var html = compress(did('canvas').innerHTML);
+        var blob = new Blob([html],{ "type" : "text/xml" });
+        var url = URL.createObjectURL(blob);
+        did('dl').download = did("filename").value+".skt";
+        did('dl').href = url;
+        did('dl').click();
+    }else if(document.getElementsByName("savetype")[1].checked){
+        exporter();
+    }
 }
 function load(e){
 
@@ -335,7 +359,7 @@ function openLoad(){
 }
 
 function confirmLoad(){
-    did('canvas').innerHTML = tempLoad;
+    did('canvas').innerHTML = uncompress(tempLoad);
     did("btnLoad").classList.add("sealbtn");
     tempLoad = "";
 }
@@ -372,33 +396,34 @@ function compress(value){
     value = value.replace(/steelblue/g, "stb");
     value = value.replace(/indianred/g, "inr");
     value = value.replace(/darkseagreen/g, "dsg");
-    return value;
+    return "<<cps>>"+value;
 }
 
 function uncompress(value){
-    value = value.replace(/<p/g, "<path");
-    value = value.replace(/<\/p>/g, "</path>");
-    value = value.replace(/s=/g, "stroke=");
-    value = value.replace(/f=/g, "fill=");
-    value = value.replace(/<t/g, "<text");
-    value = value.replace(/<\/t>/g, "</text>");
-    value = value.replace(/stb/g, "steelblue");
-    value = value.replace(/inr/g, "indianred");
-    value = value.replace(/dsg/g, "darkseagreen");
+    if(value.match(/(<<cps>>)/g) != null){
+        value = value.replace(/<p/g, "<path");
+        value = value.replace(/<\/p>/g, "</path>");
+        value = value.replace(/s=/g, "stroke=");
+        value = value.replace(/f=/g, "fill=");
+        value = value.replace(/<t/g, "<text");
+        value = value.replace(/<\/t>/g, "</text>");
+        value = value.replace(/stb/g, "steelblue");
+        value = value.replace(/inr/g, "indianred");
+        value = value.replace(/dsg/g, "darkseagreen");
+    }
     return value;
 }
 
 
 function exporter(){
-    var svg = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3840px" height="2160px"><style>@import url("https://fonts.googleapis.com/css?family=Permanent+Marker");path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}text {font-family: permanent marker, cursive;font-size: 40px;user-select: none;}.dotted{stroke-dasharray: 20;}</style>'+
+    var svg = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3840px" height="2160px"><style type="text/css">@import url("https://fonts.googleapis.com/css?family=Permanent+Marker");path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}text {font-family: permanent marker, cursive;font-size: 40px;user-select: none;}.dotted{stroke-dasharray: 20;}</style>'+
     did('canvas').innerHTML
     +'</svg>';
-
 
     var blob = new Blob([svg],{ "type" : "image/svg+xml" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.download = "test.svg";
+    a.download = did("filename").value+".svg";
     a.href = url;
     a.click();
 }

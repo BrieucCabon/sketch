@@ -18,6 +18,11 @@
     <svg id="temp"></svg>
     <span class="title">Sketch</span>
 
+    <div class="typeLogo">
+        <i id="dashLogo" class="material-icons">line_style</i>
+        <i id="straightLogo" class="material-icons">linear_scale</i>
+    </div>
+
     <div class="toolbar">
         <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-icons">menu</i></div>
         <div class="tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-icons">gradient</i></div>
@@ -37,14 +42,22 @@
     <div id="menuBox">
         <div class="menu-item" onclick="openSave()">Sauvegarder</div>
         <div class="menu-item" onclick="openLoad()">Charger</div>
-        <div class="menu-item" onclick="exporter()">Exporter SVG</div>
         <div class="menu-item" onclick="loadAutosave()">Charger Autosave</div>
     </div>
 
     <div id="saveBox" class="ioBox">
 
         <div class="closebtn" onclick="openSave()"><i class="material-icons">close</i></div>
-        <div><input class="textbox" type="text" id="filename" name="" value="" placeholder="Nom du fichier"></div><br />
+
+        <div class="filename_div">Nom du fichier</div>
+        <input class="textbox" type="text" id="filename" name="" value="" placeholder="">
+
+        <div class="radios">
+            <div class="filename_div">Type</div>
+            <input type="radio" name="savetype" value="skt">Sketch
+            <input type="radio" name="savetype" value="svg">SVG
+        </div>
+        <br />
         <div class="btn" onclick="save();openSave()">Télécharger</div>
 
 
@@ -52,7 +65,8 @@
 
     <div id="loadBox" class="ioBox">
         <div class="closebtn" onclick="openLoad()"><i class="material-icons">close</i></div>
-        <input class="textbox" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
+        <div class="filename_div">Sélectionner un fichier</div>
+        <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
         <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
 
     </div>

@@ -1,6 +1,7 @@
 body{
     margin: 0;
     background: #f7f7f7;
+    font-family: roboto;
 }
 #canvas,#temp{
     position: absolute;
@@ -193,8 +194,8 @@ text:hover{
     transition: 0.2s;
     transform:scale(0);
     opacity: 0;
-    padding:15px;
-
+    padding: 45px 30px 30px;
+    border-radius: 4px;
 }
 
 .ioBox.open{
@@ -203,15 +204,15 @@ text:hover{
 }
 
 .closebtn {
-    float: right;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     text-align: center;
-    padding-top: 5px;
-    margin-top: -10px;
-    margin-right: -10px;
+    padding: 10px;
     cursor: pointer;
     color: #bbb;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 .closebtn:hover {
     color: #999;
@@ -226,6 +227,7 @@ text:hover{
     box-shadow: 0 0 4px rgba(0,0,0,0.3);
     font-size: 18px;
     padding: 3px 5px;
+    border-radius: 3px;
 }
 
 .btn {
@@ -237,6 +239,7 @@ text:hover{
     text-align: center;
     transition: 0.15s;
     user-select: none;
+    border: 1px solid #eee;
 }
 .btn:hover {
     background: #eee;
@@ -256,25 +259,62 @@ input#files::before {
     content: "Ouvrir un fichier";
     background: #fff;
     position: absolute;
-    width: 390px;
-    height: 40px;
+    width: 100%;
+    height: 45px;
     border: 2px dashed #555;
-    line-height: 40px;
+    line-height: 42px;
     text-align: center;
     color: #555;
-    margin-top: -15px;
-    margin-left: -10px;
+    box-sizing: border-box;
 
 }
 input#files {
-    height: 0;
-    /* margin-left: 33px; */
+    height: 45px;
     font-family: roboto;
-    margin-top: 50px;
-    margin-bottom:40px;
+    position: relative;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 20px;
 }
 
 
 .dotted{
     stroke-dasharray: 20;
+}
+
+.radios {
+    margin: 10px 0;
+}
+
+.filename_div{
+    margin-bottom: 5px;
+    font-variant: all-small-caps;
+    color: #ccc;
+    font-size: 18px;
+}
+
+.radios input {
+    -webkit-appearance: none;
+    background: #dadada;
+    width: 16px;
+    height: 16px;
+    border-radius: 20px;
+    vertical-align: -1px;
+    outline: none;
+    cursor: pointer;
+}
+.radios input:checked{
+    background: #6f6f6f;
+}
+
+.typeLogo{
+    color: lightgrey;
+    position: absolute;
+    z-index: 5;
+    top: 55px;
+    left: 15px;
+    user-select: none;
+}
+#straightLogo, #dashLogo{
+    display: none;
 }
