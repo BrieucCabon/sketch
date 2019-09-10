@@ -127,7 +127,8 @@ temp.onmousemove = function(e){
 
 };
 
-document.body.onmousewheel = function(e){
+
+document.body.addEventListener("wheel",function(e){
     if(isRect){
         e.preventDefault();
         if(e.deltaY == -100){
@@ -137,8 +138,8 @@ document.body.onmousewheel = function(e){
         }
 
     }
-    // return false;
-}
+}, {passive:false});
+
 
 canvas.onmousemove = function(e){
     if(isDelete){
