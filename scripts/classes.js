@@ -4,6 +4,9 @@ class Path {
     constructor(chemin){
         this.pa = document.createElementNS('http://www.w3.org/2000/svg',"path");
         this.pa.setAttributeNS(null,"stroke",options.color);
+        if(isFill){
+            this.pa.setAttribute("style","fill:"+options.color+" !important");
+        }
         this.pa.setAttributeNS(null,"d",chemin);
         if(isCapsLock){
             this.pa.setAttributeNS(null,"class","dotted");

@@ -1,7 +1,7 @@
 canvas = document.getElementById('canvas');
 temp = document.getElementById('temp');
 
-canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = isStraight = false;
+canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = isStraight = isFill = false;
 points = [];
 origin = mouse = tempTextMouse = {};
 options = {
@@ -42,7 +42,7 @@ temp.onmouseup = function(e){
 
         var pa = new Path(path).pa;
 
-        canvas.appendChild(pa)
+        canvas.appendChild(pa);
         temp.innerHTML ="";
         points = [];
     }
@@ -73,6 +73,10 @@ temp.onmousemove = function(e){
         rand3 = 0;
         rand4 = 0;
     }
+    var m = "M";
+    if(isFill){
+        m = "L";
+    }
 
     if(isLine){
         midP = midPoint(origin, mouse);
@@ -88,17 +92,17 @@ temp.onmousemove = function(e){
         p1 = {x:mouse.x,y:origin.y};
         p2 = {x:mouse.x,y:mouse.y};
         midP = midPoint(p1, p2);
-        path += "M"+(p1.x+rand2)+","+(p1.y+rand4)+" Q"+(midP.x+rand1)+","+(midP.y+rand2)+","+p2.x+","+p2.y;
+        path += m+(p1.x+rand2)+","+(p1.y+rand4)+" Q"+(midP.x+rand1)+","+(midP.y+rand2)+","+p2.x+","+p2.y;
 
         p1 = {x:mouse.x,y:mouse.y};
         p2 = {x:origin.x,y:mouse.y};
         midP = midPoint(p1, p2);
-        path += "M"+(p1.x+rand1)+","+(p1.y+rand3)+" Q"+(midP.x+rand1)+","+(midP.y+rand2)+","+p2.x+","+p2.y;
+        path += m+(p1.x+rand1)+","+(p1.y+rand3)+" Q"+(midP.x+rand1)+","+(midP.y+rand2)+","+p2.x+","+p2.y;
 
         p1 = {x:origin.x,y:mouse.y};
         p2 = {x:origin.x,y:origin.y};
         midP = midPoint(p1, p2);
-        path += "M"+(p1.x+rand3)+","+(p1.y+rand1)+" Q"+(midP.x+rand2)+","+(midP.y+rand1)+","+p2.x+","+p2.y;
+        path += m+(p1.x+rand3)+","+(p1.y+rand1)+" Q"+(midP.x+rand2)+","+(midP.y+rand1)+","+p2.x+","+p2.y;
 
         temp.innerHTML = tag+path+'"/>';
 
@@ -165,6 +169,7 @@ canvas.onmouseup = function(e){
 }
 
 document.body.onkeydown = function(e){
+
     if(e.getModifierState("CapsLock")){
         isCapsLock = true;
         did("dashLogo").style.display = "inline-block";
@@ -179,6 +184,14 @@ document.body.onkeydown = function(e){
     }else if(e.keyCode == 222 && !isStraight){
         isStraight = true;
         did("straightLogo").style.display = "inline-block";
+    }
+
+    if(e.keyCode == 226 && isFill){
+        isFill = false;
+        did("fillLogo").style.display = "none";
+    }else if(e.keyCode == 226 && !isFill){
+        isFill = true;
+        did("fillLogo").style.display = "inline-block";
     }
 
     if(e.keyCode == 16 && !isLine){ isLine = true; }

@@ -316,6 +316,6 @@ input#files {
     left: 15px;
     user-select: none;
 }
-#straightLogo, #dashLogo{
+#straightLogo, #dashLogo, #fillLogo{
     display: none;
 }
