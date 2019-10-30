@@ -381,6 +381,14 @@ function confirmLoad(){
     tempLoad = "";
 }
 
+function showHelp(){
+    if(did("help").classList.contains("active")){
+        did("help").classList.remove("active");
+    }else{
+        did("help").classList.add("active");
+    }
+}
+
 window.addEventListener("unload",autosave);
 
 function autosave(){

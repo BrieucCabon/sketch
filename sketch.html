@@ -34,10 +34,25 @@
 
     </div>
 
+    <div class="help" id="help">
+        <div class="half">
+            <div>Line <span class="helpkey">Maj</span></div>
+            <div>Square <span class="helpkey">Ctrl</span></div>
+            <div>Ellipse <span class="helpkey">Alt</span></div>
+
+        </div>
+        <div class="half">
+            <div>Straight <span class="helpkey"><i class="material-icons">lock</i></span></div>
+            <div>Dashed <span class="helpkey">²</span></div>
+            <div>Fill <span class="helpkey"><></span></div>
+        </div>
+    </div>
+
     <div class="zoombar">
         <div class="pointer" onclick='zoomIn()'><i class="material-icons">add</i></div>
         <div id="zoomLabel">100%</div>
         <div class="pointer" onclick='zoomOut(event)'><i class="material-icons">remove</i></div>
+        <div class="pointer" onclick='showHelp()'><i class="material-icons">help_outline</i></div>
     </div>
 
     <div id="menuBox">

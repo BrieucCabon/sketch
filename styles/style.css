@@ -319,3 +319,46 @@ input#files {
 #straightLogo, #dashLogo, #fillLogo{
     display: none;
 }
+
+.help {
+    position: fixed;
+    bottom: 70px;
+    right: 10px;
+    padding: 15px;
+    text-align: right;
+    color: #aaa;
+    width: 270px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.help.active{
+    opacity: 1;
+    visibility: visible;
+}
+
+.helpkey {
+    height: 40px;
+    border: 1px solid;
+    display: inline-block;
+    width: 40px;
+    line-height: 40px;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 10px;
+    box-shadow: 0 3px;
+}
+
+.helpkey i{
+    line-height: 40px;
+    vertical-align: middle;
+}
+
+.half{
+    width:50%;
+    float:left;
+}
