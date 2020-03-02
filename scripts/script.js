@@ -197,8 +197,17 @@ document.body.onkeydown = function(e){
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
+
     // CTRL + Z
     if(e.keyCode == 90 && e.ctrlKey){ canvas.children[canvas.children.length-1].remove(); }
+
+    // Backspace
+    if(e.keyCode == 8){ 
+        if(tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y){
+            tempText.innerHTML = tempText.innerHTML.slice(0, -1);
+        }
+    }
+
     // DEL
     if(e.keyCode == 46 && options.mode == 1){
         selection.item.remove();
