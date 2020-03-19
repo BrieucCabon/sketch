@@ -58,7 +58,6 @@
     <div id="menuBox">
         <div class="menu-item" onclick="openSave()">Sauvegarder</div>
         <div class="menu-item" onclick="openLoad()">Charger</div>
-        <div class="menu-item" onclick="loadAutosave()">Charger Autosave</div>
     </div>
 
     <div id="saveBox" class="ioBox">
@@ -70,9 +69,29 @@
 
         <div class="radios">
             <div class="filename_div">Type</div>
-            <input type="radio" name="savetype" value="skt">Sketch
+            <select name="savetype" id="savetype" onchange="changeSaveType(this)">
+                <option value="skt">Sketch</option>
+                <option value="svg">SVG</option>
+                <option value="png">PNG</option>
+                <option value="jpg">JPG</option>
+            </select>
+            <div class="filename_div">Options</div>
+            <div id="skt_option" class="saveoption optvisible">
+                <input type="checkbox" name="cps" value="true" checked> Compression
+            </div>
+            <div id="svg_option" class="saveoption">
+                <input type="checkbox" name="police" value="true" checked> Police incorporée
+            </div>
+            <div id="png_option" class="saveoption">
+                <input type="checkbox" name="background" value="true"> Fond transparent
+            </div>
+            <div id="jpg_option" class="saveoption">
+                Pas d'options
+            </div>
+            <!-- <div id="jpg_option"></div> -->
+            <!-- <input type="radio" name="savetype" value="skt">Sketch
             <input type="radio" name="savetype" value="svg">SVG
-            <input type="radio" name="savetype" value="png">PNG
+            <input type="radio" name="savetype" value="png">PNG -->
         </div>
         <br />
         <div class="btn" onclick="save();openSave()">Télécharger</div>
@@ -85,7 +104,21 @@
         <div class="filename_div">Sélectionner un fichier</div>
         <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
         <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
+        <hr>
+        <div class="filename_div">Charger la sauvegarde auto</div>
+        <div class="btn" onclick="loadAutosave()">Charger</div>
+    </div>
 
+    <div class="colorbar open" id="toolbar">
+        <div class="color" id="toolDash" onclick="changeTool('dash')">
+            <i class="material-icons" style="color:black">power_input</i>
+        </div>
+        <div class="color" id="toolStra" onclick="changeTool('straight')">
+            <i class="material-icons" style="color:black">straighten</i>
+        </div>
+        <div class="color" id="toolFill" onclick="changeTool('fill')">
+            <i class="material-icons" style="color:black">tonality</i>
+        </div>
     </div>
 
     <div class="colorbar" id="colorbar">

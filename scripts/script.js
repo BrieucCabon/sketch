@@ -1,7 +1,7 @@
 canvas = document.getElementById('canvas');
 temp = document.getElementById('temp');
 
-canDraw = isLine = isRect = isCircle = isDelete = isCapsLock = isStraight = isFill = false;
+canDraw = isLine = isRect = isCircle = isDelete = isDash = isStraight = isFill = false;
 points = [];
 origin = mouse = tempTextMouse = {};
 options = {
@@ -61,7 +61,7 @@ temp.onmousemove = function(e){
     if (!canDraw) return;
     var midP;
     var tag = "";
-    if(isCapsLock){
+    if(isDash){
         tag = '<path class="dotted" d="';
     }else{
         tag = '<path d="';
@@ -170,29 +170,29 @@ canvas.onmouseup = function(e){
 
 document.body.onkeydown = function(e){
 
-    if(e.getModifierState("CapsLock")){
-        isCapsLock = true;
-        did("dashLogo").style.display = "inline-block";
-    }else{
-        isCapsLock = false;
-        did("dashLogo").style.display = "none";
-    }
+    // if(e.getModifierState("CapsLock")){
+    //     isCapsLock = true;
+    //     did("dashLogo").style.display = "inline-block";
+    // }else{
+    //     isCapsLock = false;
+    //     did("dashLogo").style.display = "none";
+    // }
 
-    if(e.keyCode == 222 && isStraight){
-        isStraight = false;
-        did("straightLogo").style.display = "none";
-    }else if(e.keyCode == 222 && !isStraight){
-        isStraight = true;
-        did("straightLogo").style.display = "inline-block";
-    }
+    // if(e.keyCode == 222 && isStraight){
+    //     isStraight = false;
+    //     did("straightLogo").style.display = "none";
+    // }else if(e.keyCode == 222 && !isStraight){
+    //     isStraight = true;
+    //     did("straightLogo").style.display = "inline-block";
+    // }
 
-    if(e.keyCode == 226 && isFill){
-        isFill = false;
-        did("fillLogo").style.display = "none";
-    }else if(e.keyCode == 226 && !isFill){
-        isFill = true;
-        did("fillLogo").style.display = "inline-block";
-    }
+    // if(e.keyCode == 226 && isFill){
+    //     isFill = false;
+    //     did("fillLogo").style.display = "none";
+    // }else if(e.keyCode == 226 && !isFill){
+    //     isFill = true;
+    //     did("fillLogo").style.display = "inline-block";
+    // }
 
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
@@ -293,6 +293,7 @@ function changeMode(md){
 
     did("canvas").classList.remove("onfront");
     did("colorbar").classList.remove("open");
+    did("toolbar").classList.remove("open");
     did("md"+md).classList.add("active");
     if(md != 3){
         openMenu(0);
@@ -305,13 +306,40 @@ function changeMode(md){
             did("canvas").classList.add("onfront");
             break;
         case 1:
-
+            did("toolbar").classList.add("open");
             break;
         case 2:
             did("colorbar").classList.add("open");
             break;
     }
 
+}
+
+
+function changeTool(type){
+    if(type == "fill" && !isFill){
+        isFill = true;
+        did("toolFill").classList.add("selected");
+    }else if(type == "fill"){
+        isFill = false;
+        did("toolFill").classList.remove("selected");
+    }
+
+    if(type == "straight" && !isStraight){
+        isStraight = true;
+        did("toolStra").classList.add("selected");
+    }else if(type == "straight"){
+        isStraight = false;
+        did("toolStra").classList.remove("selected");
+    }
+
+    if(type == "dash" && !isDash){
+        isDash = true;
+        did("toolDash").classList.add("selected");
+    }else if(type == "dash"){ 
+        isDash = false;
+        did("toolDash").classList.remove("selected");
+    }
 }
 
 function changeColor(col){
@@ -322,17 +350,26 @@ function changeColor(col){
 
 
 function save(){
-    if(document.getElementsByName("savetype")[0].checked){
-        var html = compress(did('canvas').innerHTML);
+    if(did("savetype").selectedIndex == 0){
+        var html;
+        if(document.getElementsByName("cps")[0].checked){
+            html = compress(did('canvas').innerHTML);
+        }else{
+            html = did('canvas').innerHTML;
+        }
         var blob = new Blob([html],{ "type" : "text/xml" });
         var url = URL.createObjectURL(blob);
         did('dl').download = did("filename").value+".skt";
         did('dl').href = url;
         did('dl').click();
-    }else if(document.getElementsByName("savetype")[1].checked){
+    }else if(did("savetype").selectedIndex == 1){
         exportersvg();
-    }else if(document.getElementsByName("savetype")[2].checked){
-        exporterpng();
+    }else{
+        if(did("savetype").selectedIndex == 2){
+            exporterimg("png");
+        }else{
+            exporterimg("jpg");
+        }
     }
 }
 function load(e){
@@ -451,7 +488,13 @@ function uncompress(value){
 
 
 function exportersvg(){
-    var svg = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3840px" height="2160px">'+defs+
+    var style;
+    if(document.getElementsByName("police")[0].checked){
+        style = defs;
+    }else{
+        style = defslight;
+    }
+    var svg = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3840px" height="2160px">'+style+
     did('canvas').innerHTML
     +'</svg>';
 
@@ -463,34 +506,61 @@ function exportersvg(){
     a.click();
 }
 
-function exporterpng(){
+function exporterimg(type){
     var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
     svg.innerHTML = defs + did('canvas').innerHTML;
+
+    var data = (new XMLSerializer()).serializeToString(svg);
 
     var canvas = document.createElement("canvas");
     var marge = 30;
     var bbox = did('canvas').getBBox();
-    canvas.width = bbox.width+bbox.x+marge;
-    canvas.height = bbox.height+bbox.y+marge;
-
     var ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    var data = (new XMLSerializer()).serializeToString(svg);
+    canvas.width = bbox.width + (2*marge);
+    canvas.height = bbox.height + (2*marge);
 
     var img = new Image();
     img.src = "data:image/svg+xml;base64,"+btoa(data);
 
     img.onload = function(){
-        ctx.drawImage(img, -(bbox.x - marge), -(bbox.y - marge));
-        let url = canvas.toDataURL("image/png");
+        var tempcan = document.createElement("canvas");
+        tempcan.width = 3840 + (2*marge);
+        tempcan.height = 2160 + (2*marge);
+        var ctx2 = tempcan.getContext("2d");
+        if(type == "png" && document.getElementsByName("background")[0].checked){
+            ctx2.fillStyle = "transparent";
+        }else{
+            ctx2.fillStyle = "#ffffff";
+        }
+        ctx2.fillRect(0, 0, tempcan.width, tempcan.height);
+        ctx2.drawImage(img, marge, marge);
+
+        var tempdata = ctx2.getImageData(bbox.x, bbox.y, bbox.width + (2*marge), bbox.height + (2*marge));
+        ctx.putImageData(tempdata, 0, 0);
+
+        let url = canvas.toDataURL("image/"+type);
         var a = document.createElement("a");
-        a.download = did("filename").value+".png";
+        a.download = did("filename").value+"."+type;
         a.href = url;
         a.click();
     }
 
+}
+
+function changeSaveType(elmt){
+    if(document.getElementsByClassName("optvisible").length > 0){
+        document.getElementsByClassName("optvisible")[0].classList.remove("optvisible");
+    }
+    if(elmt.selectedIndex == 0){
+        document.getElementById("skt_option").classList.add("optvisible");
+    }else if(elmt.selectedIndex == 1){
+        document.getElementById("svg_option").classList.add("optvisible");
+    }else if(elmt.selectedIndex == 2){
+        document.getElementById("png_option").classList.add("optvisible");
+    }else if(elmt.selectedIndex == 3){
+        document.getElementById("jpg_option").classList.add("optvisible");
+    }
 }
 
 
@@ -503,5 +573,12 @@ var defs = `<defs>
         path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}
         text {font-family: permanent marker, cursive;font-size: 40px;user-select: none;}.dotted{stroke-dasharray: 20;}
 
+    </style>
+</defs>`;
+
+var defslight = `<defs>
+    <style type="text/css">
+        path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}
+        text {font-family: permanent marker, cursive;font-size: 40px;user-select: none;}.dotted{stroke-dasharray: 20;}
     </style>
 </defs>`;

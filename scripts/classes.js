@@ -8,7 +8,7 @@ class Path {
             this.pa.setAttribute("style","fill:"+options.color+" !important");
         }
         this.pa.setAttributeNS(null,"d",chemin);
-        if(isCapsLock){
+        if(isDash){
             this.pa.setAttributeNS(null,"class","dotted");
         }
         // this.pa.onclick = function(e){Path.selectPath(e,this);};
