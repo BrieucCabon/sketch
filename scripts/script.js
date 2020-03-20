@@ -113,7 +113,7 @@ temp.onmousemove = function(e){
         path = "M"+origin.x+","+midy+" Q"+origin.x+","+origin.y+","+midx+","+origin.y+" Q"+mouse.x+","+origin.y+","+mouse.x+","+midy+" Q"+mouse.x+","+mouse.y+","+midx+","+mouse.y+" Q"+origin.x+","+mouse.y+","+origin.x+","+midy;
         temp.innerHTML = tag+path+'"/>';
 
-    }else if((perfCount % 3) == 0){
+    }else if((perfCount % 2) == 0){
         points.push({x:e.offsetX,y:e.offsetY});
         p1 = origin;
         p2 = points[0];
