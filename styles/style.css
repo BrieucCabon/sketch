@@ -256,7 +256,7 @@ text:hover{
     color: #ccc;
 }
 input#files.ok::before{
-    content: "Fichier importé";
+    content: "Fichier importÃ©";
     border-color: #4CAF50;
     color: #4CAF50;
 }
@@ -329,11 +329,11 @@ input#files {
 .help {
     position: fixed;
     bottom: 70px;
-    right: 10px;
-    padding: 15px;
+    right: 0;
+    padding: 10px;
     text-align: right;
     color: #aaa;
-    width: 270px;
+    width: 150px;
     opacity: 0;
     visibility: hidden;
     transition: 0.2s;
@@ -366,7 +366,7 @@ input#files {
 }
 
 .half{
-    width:50%;
+    width: 100%;
     float:left;
 }
 
