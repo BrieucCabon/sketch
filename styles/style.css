@@ -338,6 +338,8 @@ input#files {
     visibility: hidden;
     transition: 0.2s;
     user-select: none;
+    pointer-events: none;
+    mix-blend-mode: multiply;
 }
 
 .help.active{
