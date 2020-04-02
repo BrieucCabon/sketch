@@ -19,6 +19,8 @@ tempLoad ="";
 
 perfCount = 0;
 
+tempMouse = null;
+
 
 temp.onmousedown = function(e){
     if(e.button == 0 && options.mode == 1){
@@ -58,6 +60,7 @@ function midPoint(p1, p2) {
 temp.onmousemove = function(e){
 
     mouse = { x:e.offsetX , y:e.offsetY };
+    tempMouse = e;
     if (!canDraw) return;
     var midP;
     var tag = "";
@@ -185,6 +188,11 @@ document.body.onkeydown = function(e){
     //     isStraight = true;
     //     did("straightLogo").style.display = "inline-block";
     // }
+
+    // refresh mouse pos in temp
+    if(e.keyCode == 222 && tempMouse != null){
+        temp.onmousemove(tempMouse);
+    }
 
     // if(e.keyCode == 226 && isFill){
     //     isFill = false;
