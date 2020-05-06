@@ -468,7 +468,7 @@ function loadAutosave(){
 function compress(value){
     value = value.replace(/<path/g, "<p");
     value = value.replace(/<\/path>/g, "</p>");
-    value = value.replace(/stroke=/g, "s=");
+    value = value.replace(/stroke=/g, "st=");
     value = value.replace(/fill=/g, "f=");
     value = value.replace(/<text/g, "<t");
     value = value.replace(/<\/text>/g, "</t>");
@@ -483,7 +483,7 @@ function uncompress(value){
         value = value.replace(/(<<cps>>)/g, "");
         value = value.replace(/<p/g, "<path");
         value = value.replace(/<\/p>/g, "</path>");
-        value = value.replace(/s=/g, "stroke=");
+        value = value.replace(/st=/g, "stroke=");
         value = value.replace(/f=/g, "fill=");
         value = value.replace(/<t/g, "<text");
         value = value.replace(/<\/t>/g, "</text>");
