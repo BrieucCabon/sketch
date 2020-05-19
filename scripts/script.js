@@ -161,7 +161,6 @@ canvas.onmousedown = function(e){
         isDelete = true;
         if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
             e.path[0].remove();
-            console.log(e.button);
         }
     }
 }
@@ -174,34 +173,11 @@ canvas.onmouseup = function(e){
 
 document.body.onkeydown = function(e){
 
-    // if(e.getModifierState("CapsLock")){
-    //     isCapsLock = true;
-    //     did("dashLogo").style.display = "inline-block";
-    // }else{
-    //     isCapsLock = false;
-    //     did("dashLogo").style.display = "none";
-    // }
-
-    // if(e.keyCode == 222 && isStraight){
-    //     isStraight = false;
-    //     did("straightLogo").style.display = "none";
-    // }else if(e.keyCode == 222 && !isStraight){
-    //     isStraight = true;
-    //     did("straightLogo").style.display = "inline-block";
-    // }
-
     // refresh mouse pos in temp
     if(e.keyCode == 222 && tempMouse != null){
         temp.onmousemove(tempMouse);
     }
 
-    // if(e.keyCode == 226 && isFill){
-    //     isFill = false;
-    //     did("fillLogo").style.display = "none";
-    // }else if(e.keyCode == 226 && !isFill){
-    //     isFill = true;
-    //     did("fillLogo").style.display = "inline-block";
-    // }
 
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
