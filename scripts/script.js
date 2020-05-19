@@ -529,7 +529,7 @@ function exporterimg(type){
     canvas.height = bbox.height + (2*marge);
 
     var img = new Image();
-    img.src = "data:image/svg+xml;base64,"+btoa(data);
+    img.src = "data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(data)));
 
     img.onload = function(){
         var tempcan = document.createElement("canvas");
