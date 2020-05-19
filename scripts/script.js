@@ -157,10 +157,11 @@ canvas.onmousemove = function(e){
 }
 
 canvas.onmousedown = function(e){
-    if(options.mode == 0){
+    if(options.mode == 0 && e.button == 0){
         isDelete = true;
         if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
             e.path[0].remove();
+            console.log(e.button);
         }
     }
 }
