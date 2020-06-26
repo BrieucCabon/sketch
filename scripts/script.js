@@ -334,27 +334,30 @@ function changeColor(col){
 }
 
 
-function save(){
-    if(did("savetype").selectedIndex == 0){
-        var html;
-        if(document.getElementsByName("cps")[0].checked){
-            html = compress(did('canvas').innerHTML);
+function save(e){
+    if(did("filename").value != ""){
+        if(did("savetype").selectedIndex == 0){
+            var html;
+            if(document.getElementsByName("cps")[0].checked){
+                html = compress(did('canvas').innerHTML);
+            }else{
+                html = did('canvas').innerHTML;
+            }
+            var blob = new Blob([html],{ "type" : "text/xml" });
+            var url = URL.createObjectURL(blob);
+            did('dl').download = did("filename").value+".skt";
+            did('dl').href = url;
+            did('dl').click();
+        }else if(did("savetype").selectedIndex == 1){
+            exportersvg();
         }else{
-            html = did('canvas').innerHTML;
+            if(did("savetype").selectedIndex == 2){
+                exporterimg("png");
+            }else{
+                exporterimg("jpg");
+            }
         }
-        var blob = new Blob([html],{ "type" : "text/xml" });
-        var url = URL.createObjectURL(blob);
-        did('dl').download = did("filename").value+".skt";
-        did('dl').href = url;
-        did('dl').click();
-    }else if(did("savetype").selectedIndex == 1){
-        exportersvg();
-    }else{
-        if(did("savetype").selectedIndex == 2){
-            exporterimg("png");
-        }else{
-            exporterimg("jpg");
-        }
+        openSave();
     }
 }
 function load(e){
