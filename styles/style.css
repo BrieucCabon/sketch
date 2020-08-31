@@ -404,3 +404,17 @@ hr {
 #toolbar .color.selected i{
     color: #eee !important;
 }
+
+.save-indicator {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    user-select: none;
+    pointer-events: none;
+    transition: 1s;
+    opacity: 0;
+    color: #004c99;
+}
+.save-indicator.visible {
+    opacity: 1;
+}
