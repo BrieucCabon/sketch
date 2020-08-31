@@ -381,6 +381,7 @@ hr {
 
 .saveoption{
     display: none;
+    min-height: 22px;
 }
 .saveoption.optvisible{
     display: block;
