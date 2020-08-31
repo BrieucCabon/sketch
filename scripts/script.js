@@ -178,13 +178,15 @@ document.body.onkeydown = function(e){
         temp.onmousemove(tempMouse);
     }
 
-
     if(e.keyCode == 16 && !isLine){ isLine = true; }
     if(e.keyCode == 17 && !isRect){ isRect = true; }
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
 
     // CTRL + Z
     if(e.keyCode == 90 && e.ctrlKey){ canvas.children[canvas.children.length-1].remove(); }
+
+    // CTRL + S
+    if(e.keyCode == 83 && e.ctrlKey){ e.preventDefault(); autosave(); }
 
     // Backspace
     if(e.keyCode == 8){ 
