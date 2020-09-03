@@ -110,14 +110,20 @@ text:hover{
 
 .zoombar div {
     padding: 10px;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.1), 0 0 4px rgba(0,0,0,0.1);
+    /* box-shadow: 0 2px 2px rgba(0,0,0,0.1), 0 0 4px rgba(0,0,0,0.1); */
+    box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2);
     float: left;
     margin-right: 5px;
     background: #fff;
     height: 24px;
     line-height: 24px;
     font-family: roboto;
-    border-radius: 5px;
+    border-radius: 30px;
+    margin-left: 5px;
+}
+#zoomLabel {
+    width: 50px;
+    text-align: center;
 }
 
 .pointer{
@@ -192,20 +198,36 @@ text:hover{
 .ioBox {
     position: fixed;
     background: #fff;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2);
-    bottom: 150px;
-    left: 70px;
+    /* box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2); */
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.1);
+    bottom: 15px;
+    left: 75px;
     z-index: 10;
     transition: 0.2s;
     transform:scale(0);
     opacity: 0;
     padding: 45px 30px 30px;
     border-radius: 4px;
+    transform-origin: center left;
+    
+}
+#saveBox.ioBox{
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    grid-gap: 30px;
 }
 
 .ioBox.open{
     transform:scale(1);
     opacity: 1;
+}
+img#preview {
+    border: 2px solid #cccccc;
+    max-height: 230px;
+    display: inline-block;
+    border-radius: 3px;
+    margin: auto;
+    max-width: 345px;
 }
 
 .closebtn {

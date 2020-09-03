@@ -42,9 +42,10 @@ temp.onmouseup = function(e){
         p1 = origin;
         p2 = points[0];
 
-        var pa = new Path(path).pa;
-
-        canvas.appendChild(pa);
+        if(path.search(/M[0-9]+,[0-9]+$/) === -1){
+            var pa = new Path(path).pa;
+            canvas.appendChild(pa);
+        }
         temp.innerHTML ="";
         points = [];
     }
@@ -397,6 +398,7 @@ function openSave(){
     if(did("saveBox").classList.contains("open")){
         did("saveBox").classList.remove("open");
     }else{
+        preview();
         did("saveBox").classList.add("open");
     }
 }
@@ -540,6 +542,42 @@ function exporterimg(type){
         a.click();
     }
 
+}
+
+function preview(){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.innerHTML = defs + did('canvas').innerHTML;
+
+    var data = (new XMLSerializer()).serializeToString(svg);
+
+    var canvas = document.createElement("canvas");
+    var marge = 30;
+    var bbox = did('canvas').getBBox();
+    var ctx = canvas.getContext("2d");
+
+    canvas.width = bbox.width + (2*marge);
+    canvas.height = bbox.height + (2*marge);
+
+    var img = new Image();
+    img.src = "data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(data)));
+
+    img.onload = function(){
+        var tempcan = document.createElement("canvas");
+        tempcan.width = 3840 + (2*marge);
+        tempcan.height = 2160 + (2*marge);
+        var ctx2 = tempcan.getContext("2d");
+
+        ctx2.fillStyle = "#ffffff";
+        
+        ctx2.fillRect(0, 0, tempcan.width, tempcan.height);
+        ctx2.drawImage(img, marge, marge);
+
+        var tempdata = ctx2.getImageData(bbox.x, bbox.y, bbox.width + (2*marge), bbox.height + (2*marge));
+        ctx.putImageData(tempdata, 0, 0);
+
+        let url = canvas.toDataURL("image/jpg");
+        did("preview").src= url;
+    }
 }
 
 function changeSaveType(elmt){

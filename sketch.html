@@ -67,39 +67,43 @@
     <div id="saveBox" class="ioBox">
 
         <div class="closebtn" onclick="openSave()"><i class="material-icons">close</i></div>
+        <div>
+            <div class="filename_div">Nom du fichier</div>
+            <input class="textbox" type="text" id="filename" name="" value="" placeholder="">
 
-        <div class="filename_div">Nom du fichier</div>
-        <input class="textbox" type="text" id="filename" name="" value="" placeholder="">
-
-        <div class="radios">
-            <div class="filename_div">Type</div>
-            <select name="savetype" id="savetype" onchange="changeSaveType(this)">
-                <option value="skt">Sketch</option>
-                <option value="svg">SVG</option>
-                <option value="png">PNG</option>
-                <option value="jpg">JPG</option>
-            </select>
-            <div class="filename_div">Options</div>
-            <div id="skt_option" class="saveoption optvisible">
-                <input type="checkbox" name="cps" value="true" checked> Compression
+            <div class="radios">
+                <div class="filename_div">Type</div>
+                <select name="savetype" id="savetype" onchange="changeSaveType(this)">
+                    <option value="skt">Sketch</option>
+                    <option value="svg">SVG</option>
+                    <option value="png">PNG</option>
+                    <option value="jpg">JPG</option>
+                </select>
+                <div class="filename_div">Options</div>
+                <div id="skt_option" class="saveoption optvisible">
+                    <input type="checkbox" name="cps" value="true" checked> Compression
+                </div>
+                <div id="svg_option" class="saveoption">
+                    <input type="checkbox" name="police" value="true" checked> Police incorporée
+                </div>
+                <div id="png_option" class="saveoption">
+                    <input type="checkbox" name="background" value="true"> Fond transparent
+                </div>
+                <div id="jpg_option" class="saveoption">
+                    Pas d'options
+                </div>
+                <!-- <div id="jpg_option"></div> -->
+                <!-- <input type="radio" name="savetype" value="skt">Sketch
+                <input type="radio" name="savetype" value="svg">SVG
+                <input type="radio" name="savetype" value="png">PNG -->
             </div>
-            <div id="svg_option" class="saveoption">
-                <input type="checkbox" name="police" value="true" checked> Police incorporée
-            </div>
-            <div id="png_option" class="saveoption">
-                <input type="checkbox" name="background" value="true"> Fond transparent
-            </div>
-            <div id="jpg_option" class="saveoption">
-                Pas d'options
-            </div>
-            <!-- <div id="jpg_option"></div> -->
-            <!-- <input type="radio" name="savetype" value="skt">Sketch
-            <input type="radio" name="savetype" value="svg">SVG
-            <input type="radio" name="savetype" value="png">PNG -->
+            <br />
+            <div class="btn" onclick="save();">Télécharger</div>
         </div>
-        <br />
-        <div class="btn" onclick="save();">Télécharger</div>
-
+        <div>
+            <div class="filename_div">Preview</div>
+            <img src="" id="preview" alt="">
+        </div>
 
     </div>
 
