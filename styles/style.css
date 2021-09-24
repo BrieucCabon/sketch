@@ -80,10 +80,11 @@ text:hover{
 .tool {
     width: 50px;
     height: 50px;
-    background: #f7f7f7;
+    background: rgb(0 76 153 / 10%);
     border-radius: 50px;
     margin: 15px 5px;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2);
+    /* box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2); */
+    /* box-shadow: 0 0.2rem 0.5rem rgb(0 0 0 / 40%); */
     text-align: center;
     cursor: pointer;
     padding-top: 13px;
@@ -92,7 +93,7 @@ text:hover{
 
 .tool.active{
     color: #fff;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 0 5px rgba(0,0,0,0.2);
+    /* box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 0 5px rgba(0,0,0,0.2); */
     background: #004c99;
 }
 
@@ -174,12 +175,16 @@ text:hover{
     bottom: 190px;
     background: #fff;
     box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2);
+    box-shadow: 0 .2rem .5rem rgb(0 0 0 / 20%);
     left: 80px;
     transition: 0.3s ,0.2s opacity;
     transform:translateX(-110%);
     opacity: 0;
     visibility: hidden;
     will-change: transform;
+    border-radius: 1rem;
+    overflow: hidden;
+    padding: 5px;
 }
 #menuBox.open{
     transform:translateX(0%);
@@ -189,17 +194,18 @@ text:hover{
 .menu-item{
     font-family: roboto;
     padding: 15px 20px;
+    border-radius: calc(1rem - 5px);
 }
 .menu-item:hover{
-    background: #ddd;
+    background: rgb(0 76 153 / 10%);
     cursor: pointer;
 }
 
 .ioBox {
     position: fixed;
     background: #fff;
-    /* box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2); */
-    box-shadow: 0 3px 5px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.1);
+    box-shadow: 0 .2rem .5rem rgb(0 0 0 / 20%);
+    border-radius: 1rem;
     bottom: 15px;
     left: 75px;
     z-index: 10;
@@ -207,14 +213,16 @@ text:hover{
     transform:scale(0);
     opacity: 0;
     padding: 45px 30px 30px;
-    border-radius: 4px;
     transform-origin: center left;
-    
 }
 #saveBox.ioBox{
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     grid-gap: 30px;
+}
+
+#optionBox {
+    bottom: 10rem;
 }
 
 .ioBox.open{
@@ -231,22 +239,29 @@ img#preview {
 }
 
 .closebtn {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
     color: #bbb;
     position: absolute;
     top: 0;
     right: 0;
+    line-height: 55px;
 }
 .closebtn:hover {
     color: #999;
 }
 
+.closebtn:hover i {
+    background: rgb(0 76 153 / 10%);
+}
+
 .closebtn i {
-    font-size: 30px;
+    padding: 5px;
+    border-radius: 50px;
+    transition: .1s;
 }
 
 .textbox {
@@ -278,7 +293,7 @@ img#preview {
     color: #ccc;
 }
 input#files.ok::before{
-    content: "Fichier importÃ©";
+    content: "Fichier importé";
     border-color: #4CAF50;
     color: #4CAF50;
 }
