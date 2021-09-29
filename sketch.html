@@ -66,70 +66,83 @@
     </div>
 
     <div id="saveBox" class="ioBox">
+        <div class="ioBox-header">
+            <div class="ioBox-title">Sauvegarder</div>
+            <div class="closebtn" onclick="openSave()"><i class="material-icons">close</i></div>
+        </div>
+        <div class="ioBox-content">
+            <div>
+                <div class="filename_div">Nom du fichier</div>
+                <input class="textbox" type="text" id="filename" name="" value="" placeholder="">
 
-        <div class="closebtn" onclick="openSave()"><i class="material-icons">close</i></div>
-        <div>
-            <div class="filename_div">Nom du fichier</div>
-            <input class="textbox" type="text" id="filename" name="" value="" placeholder="">
+                <div class="radios">
+                    <div class="filename_div">Type</div>
+                    <select name="savetype" id="savetype" onchange="changeSaveType(this)">
+                        <option value="skt">Sketch</option>
+                        <option value="svg">SVG</option>
+                        <option value="png">PNG</option>
+                        <option value="jpg">JPG</option>
+                    </select>
+                    <div class="filename_div">Options</div>
+                    <div id="skt_option" class="saveoption optvisible">
+                        <input type="checkbox" name="cps" value="true" checked> Compression <small>(-<span id="cpsgain"></span>%)</small>
 
-            <div class="radios">
-                <div class="filename_div">Type</div>
-                <select name="savetype" id="savetype" onchange="changeSaveType(this)">
-                    <option value="skt">Sketch</option>
-                    <option value="svg">SVG</option>
-                    <option value="png">PNG</option>
-                    <option value="jpg">JPG</option>
-                </select>
-                <div class="filename_div">Options</div>
-                <div id="skt_option" class="saveoption optvisible">
-                    <input type="checkbox" name="cps" value="true" checked> Compression <small>(-<span id="cpsgain"></span>%)</small>
-
+                    </div>
+                    <div id="svg_option" class="saveoption">
+                        <input type="checkbox" name="police" value="true" checked> Police incorporée
+                    </div>
+                    <div id="png_option" class="saveoption">
+                        <input type="checkbox" name="background" value="true"> Fond transparent
+                    </div>
+                    <div id="jpg_option" class="saveoption">
+                        Pas d'options
+                    </div>
+                    <!-- <div id="jpg_option"></div> -->
+                    <!-- <input type="radio" name="savetype" value="skt">Sketch
+                    <input type="radio" name="savetype" value="svg">SVG
+                    <input type="radio" name="savetype" value="png">PNG -->
                 </div>
-                <div id="svg_option" class="saveoption">
-                    <input type="checkbox" name="police" value="true" checked> Police incorporée
-                </div>
-                <div id="png_option" class="saveoption">
-                    <input type="checkbox" name="background" value="true"> Fond transparent
-                </div>
-                <div id="jpg_option" class="saveoption">
-                    Pas d'options
-                </div>
-                <!-- <div id="jpg_option"></div> -->
-                <!-- <input type="radio" name="savetype" value="skt">Sketch
-                <input type="radio" name="savetype" value="svg">SVG
-                <input type="radio" name="savetype" value="png">PNG -->
+                <br />
+                <div class="btn" onclick="save();">Télécharger</div>
             </div>
-            <br />
-            <div class="btn" onclick="save();">Télécharger</div>
+            <div>
+                <div class="filename_div">Preview</div>
+                <img src="" id="preview" alt="">
+            </div>
         </div>
-        <div>
-            <div class="filename_div">Preview</div>
-            <img src="" id="preview" alt="">
-        </div>
-
     </div>
 
     <div id="loadBox" class="ioBox">
-        <div class="closebtn" onclick="openLoad()"><i class="material-icons">close</i></div>
-        <div class="filename_div">Sélectionner un fichier</div>
-        <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
-        <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
-        <hr>
-        <div class="filename_div">Charger la sauvegarde auto</div>
-        <div class="btn" onclick="loadAutosave()">Charger</div>
+        <div class="ioBox-header">
+            <div class="ioBox-title">Charger</div>
+            <div class="closebtn" onclick="openLoad()"><i class="material-icons">close</i></div>
+        </div>
+        <div class="ioBox-content">
+            <div class="filename_div">Sélectionner un fichier</div>
+            <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
+            <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
+            <hr>
+            <div class="filename_div">Charger la sauvegarde auto</div>
+            <div class="btn" onclick="loadAutosave()">Charger</div>
+        </div>
     </div>
 
     <div id="optionBox" class="ioBox">
-        <div class="closebtn" onclick="openOption()"><i class="material-icons">close</i></div>
+        <div class="ioBox-header">
+            <div class="ioBox-title">Options</div>
+            <div class="closebtn" onclick="openOption()"><i class="material-icons">close</i></div>
+        </div>
+        <div class="ioBox-content">
         <div class="filename_div">Police</div>
-        <select name="savetype" id="savetype" onchange="changePolice(this)">
-            <option value="Permanent marker">Permanent Marker (Défaut)</option>
-            <option value="monospace">Monospace (standard)</option>
-            <option value="cursive">Cursive (standard)</option>
-            <option value="sans-serif">Sans serif (standard)</option>
-            <option value="serif">Serif (standard)</option>
-            <option value="fantasy">Fantasy (standard)</option>
-        </select>
+            <select name="savetype" id="savetype" onchange="changePolice(this)">
+                <option value="Permanent marker">Permanent Marker (Défaut)</option>
+                <option value="monospace">Monospace (standard)</option>
+                <option value="cursive">Cursive (standard)</option>
+                <option value="sans-serif">Sans serif (standard)</option>
+                <option value="serif">Serif (standard)</option>
+                <option value="fantasy">Fantasy (standard)</option>
+            </select>
+        </div>
     </div>
 
     <div class="colorbar open" id="toolbar">

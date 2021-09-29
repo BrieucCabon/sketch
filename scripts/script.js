@@ -22,7 +22,6 @@ perfCount = 0;
 tempMouse = null;
 
 police = "permanent marker";
-police = "fantasy";
 
 temp.onmousedown = function(e){
     if(e.button == 0 && options.mode == 1){
@@ -559,8 +558,14 @@ function preview(){
 
     var compressed = compress(did('canvas').innerHTML);
     var gain = 100 - (compressed.length * 100 / did('canvas').innerHTML.length);
-    gain = Math.round(gain * 100) / 100;
+    if(did('canvas').innerHTML.length == 0){
+        gain = 0;
+    }else{
+        gain = Math.round(gain * 100) / 100;
+    }
+
     did("cpsgain").innerHTML = gain;
+
     svg.innerHTML = getDefs() + did('canvas').innerHTML;
 
     var data = (new XMLSerializer()).serializeToString(svg);
