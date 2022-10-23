@@ -138,15 +138,32 @@ temp.onmousemove = function(e){
 
 
 document.body.addEventListener("wheel",function(e){
-    if(isRect){
+    // if(isRect){
         e.preventDefault();
-        if(e.deltaY == -100){
+        let rect = did("canvas").getBoundingClientRect();
+
+        let left = (e.pageX - rect.left);
+        let top = (e.pageY - rect.top);
+
+        top = top * 100 / rect.height;
+        left = left * 100 / rect.width;
+        if(top < 0) top=0;
+        if(top > 100) top=100;
+        if(left < 0) left=0;
+        if(left > 100) left=100;
+
+        did("canvas").style.transformOrigin = top + "% " + left+"%";
+        did("temp").style.transformOrigin = top + "% " + left+"%";
+
+        if(e.deltaY < 0){
             zoomIn();
         }else{
             zoomOut();
         }
+        
 
-    }
+
+    // }
 }, {passive:false});
 
 
@@ -260,14 +277,16 @@ function zoomIn(){
     if(options.zoom == 300) return;
     options.zoom += 20;
     did("zoomLabel").innerHTML = options.zoom+"%";
+    did("zoomsliderinner").style.width = (options.zoom * 100 / 300)+"%";
     did("temp").style.transform = "scale("+ (options.zoom/100)+")";
     did("canvas").style.transform = "scale("+ (options.zoom/100)+")";
 }
 
 function zoomOut(){
-    if(options.zoom == 40) return;
+    if(options.zoom == 20) return;
     options.zoom = options.zoom -20;
     did("zoomLabel").innerHTML = options.zoom+"%";
+    did("zoomsliderinner").style.width = (options.zoom * 100 / 300)+"%";
     did("temp").style.transform = "scale("+ (options.zoom/100)+")";
     did("canvas").style.transform = "scale("+ (options.zoom/100)+")";
 }
@@ -641,7 +660,45 @@ function getDefsLight(){
             path{stroke-linejoin: round;stroke-linecap: round;stroke-width:6;fill:none;}
             text {font-family:`+police+`;font-size: 40px;user-select: none;}.dotted{stroke-dasharray: 20;}
         </style>
-    </defs>`;;
+    </defs>`;
 }
 
 
+var panOrigin = null;
+var pan = false;
+function startPan(e){
+
+    if(e.buttons == 4){
+        e.preventDefault();
+        panOrigin = {
+            x: e.pageX - did("temp").style.left.replace("px",""), 
+            y: e.pageY - did("temp").style.top.replace("px","")
+        };
+
+        pan = true;
+    }
+}
+
+function movePan(e){
+    if(pan && e.buttons == 4){
+        e.preventDefault();
+
+        let left = did("temp").style.left.replace("px","");
+        let top = did("temp").style.top.replace("px","");
+
+        if(left == ""){left = 0;}
+        if(top == ""){top = 0;}
+  
+        did("temp").style.left = (e.pageX - panOrigin.x) +"px";
+        did("canvas").style.left = (e.pageX - panOrigin.x) +"px";  
+
+        did("temp").style.top = (e.pageY - panOrigin.y) +"px";
+        did("canvas").style.top = (e.pageY - panOrigin.y) +"px";
+
+    }
+
+}
+
+function stopPan(){
+    pan = false;
+}

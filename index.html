@@ -9,63 +9,91 @@
     <script defer src="scripts/script.js" charset="utf-8"></script>
     <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,300,0,0" /> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,1,0" /> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
 </head>
-<body>
+<body onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()">
     <a id="dl" download style="display:none"></a>
     <svg id="canvas"></svg>
     <svg id="temp"></svg>
-    <span class="title">Sketch</span>
+    
 
     <div class="typeLogo">
-        <i id="dashLogo" class="material-icons">flip</i>
+        <i id="dashLogo" class="material-symbols-rounded">flip</i>
         <i id="straightLogo" class="material-icons">linear_scale</i>
         <i id="fillLogo" class="material-icons">tonality</i>
     </div>
+    <span class="title">Sketch</span>
 
-    <div class="toolbar">
+    <!-- <div class="menubar">
+        <div class="menu-item" onclick="openSave()">Sauvegarder</div>
+        <div class="menu-item" onclick="openLoad()">Charger</div>
+        <div class="menu-item" onclick="openOption()">Options</div>
+    </div> -->
+
+    <div class="toolbar toolbar_top">
         <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-icons">menu</i></div>
-        <div class="tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-icons">gradient</i></div>
+        <div class="zoombar">
+            <div class="pointer" onclick='zoomOut(event)'><i class="material-icons">remove</i></div>
+            <div class="zoomslider">
+                <div id="zoomsliderinner"></div>
+                <div id="zoomLabel">100%</div>
+            </div>
+            <div class="pointer" onclick='zoomIn()'><i class="material-icons">add</i></div>
+            <!-- <div class="pointer" onclick='showHelp()'><i class="material-icons">help_outline</i></div> -->
+        </div>
 
+    </div>
+    
+    <div class="toolbar toolbar_left">
         <div class="tool active" id="md1" onclick="changeMode(1)" title="Crayon"><i class="material-icons">mode_edit</i></div>
-
+        <div class="tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-icons">gradient</i></div>
         <div class="tool" id="md2" onclick="changeMode(2)"><i class="material-icons" id="palette">color_lens</i></div>
+    </div>
 
+    <div id="menuBox">
+        <div class="menu-title">Menu</div>
+        <div class="menu-item" onclick="openSave()"><i class="material-icons">download</i> Sauvegarder</div>
+        <div class="menu-item" onclick="openLoad()"><i class="material-icons">file_upload</i> Charger</div>
+        <div class="menu-item" onclick="openOption()"><i class="material-icons">settings</i> Options</div>
+        <div class="menu-item" onclick="showHelp()"><i class="material-icons">help</i> Aide</div>
     </div>
 
     <div class="help" id="help">
-        <div class="half">
-            <div>Ligne <span class="helpkey">Maj</span></div>
-            <div>Rectangle <span class="helpkey">Ctrl</span></div>
-            <div>Ellipse <span class="helpkey">Alt</span></div>
-            <div>Undo <span class="helpkey">Ctrl</span> + <span class="helpkey">Z</span></div>
-            <div>Save local <span class="helpkey">Ctrl</span> + <span class="helpkey">S</span></div>
+        <div class="menu-title">Aide</div>
 
+        <div class="helpline">
+            <div><span class="helpkey">Maj</span></div>
+            <div>Ligne</div>
         </div>
-        <!-- <div class="half">
-            <div>Straight <span class="helpkey">²</span></div>
-            <div>Dashed <span class="helpkey"><i class="material-icons">lock</i></span></div>
-            <div>Fill <span class="helpkey"><></span></div>
-        </div> -->
+        <div class="helpline">
+            <div><span class="helpkey">Ctrl</span></div>
+            <div>Rectangle</div>
+        </div>
+        <div class="helpline">
+            <div><span class="helpkey">Alt</span></div>
+            <div>Ellipse</div>
+        </div>
+        <div class="helpline">
+            <div><span class="helpkey">Ctrl</span> + <span class="helpkey">Z</span></div>
+            <div>Undo</div>
+        </div>
+        <div class="helpline">
+            <div><span class="helpkey">Ctrl</span> + <span class="helpkey">S</span></div>
+            <div>Save local</div>
+        </div>
+        
     </div>
 
     <div id="sindic" class="save-indicator">
         <i class="material-icons">save</i> 
     </div>
 
-    <div class="zoombar">
-        <div class="pointer" onclick='zoomIn()'><i class="material-icons">add</i></div>
-        <div id="zoomLabel">100%</div>
-        <div class="pointer" onclick='zoomOut(event)'><i class="material-icons">remove</i></div>
-        <div class="pointer" onclick='showHelp()'><i class="material-icons">help_outline</i></div>
-    </div>
+    
 
-    <div id="menuBox">
-        <div class="menu-item" onclick="openSave()">Sauvegarder</div>
-        <div class="menu-item" onclick="openLoad()">Charger</div>
-        <div class="menu-item" onclick="openOption()">Options</div>
-    </div>
+    
 
     <div id="saveBox" class="ioBox">
         <div class="ioBox-header">
