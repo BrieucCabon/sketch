@@ -55,7 +55,7 @@ path {
 }
 
 path:hover {
-    stroke: grey;
+    stroke: var(--primary-tone) !important;
 }
 
 text {
@@ -65,7 +65,7 @@ text {
 }
 
 text:hover {
-    fill: grey;
+    fill: var(--primary-tone) !important;
     cursor: default;
 }
 
@@ -118,11 +118,16 @@ text:hover {
     box-sizing: border-box;
     display: grid;
     align-items: center;
+    transition: 0.1s;
+    position: relative;
 }
 
 .tool.active {
     color: var(--primary);
     background: var(--primary-tint);
+}
+.tool:hover {
+    color: var(--primary-shade);
 }
 
 .toolbar_left {
@@ -133,9 +138,6 @@ text:hover {
     grid-auto-flow: column;
 }
 
-#md2 {
-    color: black;
-}
 
 .zoombar {
     user-select: none;
@@ -188,7 +190,56 @@ text:hover {
     border-radius: 10px;
 }
 
-.colorbar {
+.colorblock {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    margin: auto;
+}
+
+.colorpicker {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    overflow: hidden;
+    border-radius: 50px;
+    background: #fff;
+    color: var(--primary-shade);
+    top: -2px;
+    right: -2px;
+    text-align: center;
+    box-shadow: 0 0rem 0.5rem rgb(0 0 0 / 25%);
+    transition: 0.1s;
+}
+.colorpicker:hover {
+    background: var(--primary-tint);
+}
+
+.colorpicker input {
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.colorpicker i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* .colorbar {
     position: fixed;
     z-index: 5;
     left: 70px;
@@ -200,21 +251,28 @@ text:hover {
 
 .colorbar.open {
     transform: translateY(0%);
-}
+} */
 
-.color {
+/* .color {
     width: 40px;
     height: 40px;
-    background: #e5edf5;
-    border-radius: 50px;
-    margin: 15px 5px;
+    border-radius: 5px;
     text-align: center;
     cursor: pointer;
     padding-top: 8px;
     box-sizing: border-box;
-    float: left;
     user-select: none;
+    transition: 0.1s;
+    color: var(--primary-tone);
 }
+.color:hover{
+    color: var(--primary-shade);
+}
+
+.color.selected {
+    background: var(--primary-tint);
+    color: var(--primary);
+} */
 
 #mover {
     background: rgba(0, 0, 0, 0.25);
@@ -517,17 +575,15 @@ hr {
     margin-bottom: 15px;
 }
 
-#toolbar .color {
-    transition: 0.1s;
+
+
+
+.separator {
+    width: 1px;
+    height: 100%;
+    background: var(--primary-tint);
 }
 
-#toolbar .color.selected {
-    background: var(--primary);
-}
-
-#toolbar .color.selected i {
-    color: #eee !important;
-}
 
 .save-indicator {
     position: fixed;
@@ -537,12 +593,46 @@ hr {
     pointer-events: none;
     transition: 1s;
     opacity: 0;
+    visibility: hidden;
+    display: none;
     color: var(--primary);
 }
 
 .save-indicator.visible {
     opacity: 1;
+    visibility: visible;
+    display: block;
 }
+
+.saveanim {
+    position: relative;
+    width: 38px;
+    height: 38px;
+}
+
+.saveanimback {
+    position: absolute;
+    color: var(--primary-tint);
+    font-size: 38px !important;
+}
+
+.saveanimfront {
+    position: absolute;
+    color: var(--primary);
+    transform-origin: bottom center;
+    animation: saveAnim 1.5s;
+    height: 0px;
+    overflow: hidden;
+    font-size: 38px !important;
+}
+
+@keyframes saveAnim{
+    0%{height:0px}
+    100%{height:38px;}
+}
+
+
+
 
 .ioBox-header {
     display: grid;

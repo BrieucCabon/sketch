@@ -1,7 +1,7 @@
 canvas = document.getElementById('canvas');
 temp = document.getElementById('temp');
 
-canDraw = isLine = isRect = isCircle = isDelete = isDash = isStraight = isFill = false;
+canDraw = isLine = isRect = isCircle = isDelete = isDash = isStraight = isFill = isBucket = false;
 points = [];
 origin = mouse = tempTextMouse = {};
 options = {
@@ -169,8 +169,18 @@ document.body.addEventListener("wheel",function(e){
 
 canvas.onmousemove = function(e){
     if(isDelete){
-        if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
-            e.path[0].remove();
+        if(e.target.nodeName == "path" || e.target.nodeName == "text"){
+            e.target.remove();
+        }
+    }
+    if(isBucket){
+        if(e.target.nodeName == "path"){
+            e.target.style.stroke = options.color;
+            if(e.target.style.fill != ""){
+                e.target.style.fill = options.color;
+            }
+        }else if(e.target.nodeName == "text"){
+            e.target.style.fill = options.color;
         }
     }
 }
@@ -178,15 +188,30 @@ canvas.onmousemove = function(e){
 canvas.onmousedown = function(e){
     if(options.mode == 0 && e.button == 0){
         isDelete = true;
-        if(e.path[0].nodeName == "path" || e.path[0].nodeName == "text"){
-            e.path[0].remove();
+        if(e.target.nodeName == "path" || e.target.nodeName == "text"){
+            e.target.remove();
         }
+    }
+    if(options.mode == 2 && e.button == 0){
+        isBucket = true;
+        if(e.target.nodeName == "path"){
+            e.target.style.stroke = options.color;
+            if(e.target.style.fill != ""){
+                e.target.style.fill = options.color;
+            }
+        }else if(e.target.nodeName == "text"){
+            e.target.style.fill = options.color;
+        }
+
     }
 }
 
 canvas.onmouseup = function(e){
     if(options.mode == 0){
         isDelete = false;
+    }
+    if(options.mode == 2){
+        isBucket = false;
     }
 }
 
@@ -294,14 +319,14 @@ function zoomOut(){
 
 function changeMode(md){
     options.mode = md;
-    var tools = document.getElementsByClassName("tool");
+    var tools = document.getElementsByClassName("toolcls");
     for(var i = 0;i<tools.length;i++){
         tools[i].classList.remove("active");
     }
 
     did("canvas").classList.remove("onfront");
     did("colorbar").classList.remove("open");
-    did("toolbar").classList.remove("open");
+    // did("toolbar").classList.remove("open");
     did("md"+md).classList.add("active");
     if(md != 3){
         openMenu(0);
@@ -314,10 +339,11 @@ function changeMode(md){
             did("canvas").classList.add("onfront");
             break;
         case 1:
-            did("toolbar").classList.add("open");
+            // did("toolbar").classList.add("open");
             break;
         case 2:
-            did("colorbar").classList.add("open");
+            did("canvas").classList.add("onfront");
+            // did("colorbar").classList.add("open");
             break;
     }
 
@@ -327,35 +353,47 @@ function changeMode(md){
 function changeTool(type){
     if(type == "fill" && !isFill){
         isFill = true;
-        did("toolFill").classList.add("selected");
+        did("toolFill").classList.add("active");
     }else if(type == "fill"){
         isFill = false;
-        did("toolFill").classList.remove("selected");
+        did("toolFill").classList.remove("active");
     }
 
     if(type == "straight" && !isStraight){
         isStraight = true;
-        did("toolStra").classList.add("selected");
+        did("toolStra").classList.add("active");
     }else if(type == "straight"){
         isStraight = false;
-        did("toolStra").classList.remove("selected");
+        did("toolStra").classList.remove("active");
     }
 
     if(type == "dash" && !isDash){
         isDash = true;
-        did("toolDash").classList.add("selected");
+        did("toolDash").classList.add("active");
     }else if(type == "dash"){ 
         isDash = false;
-        did("toolDash").classList.remove("selected");
+        did("toolDash").classList.remove("active");
     }
 }
 
-function changeColor(col){
+function changeColor(id, col){
+    if(id == 5 && col == ""){
+        col = did("colorinput").value;
+    }
     options.color = col;
-    did("palette").style.color = options.color;
-    changeMode(1);
+
+    [1,2,3,4,5].forEach(x=>{
+        did("color"+x).classList.remove("active");
+        
+    });
+    did("color"+id).classList.add("active");
 }
 
+
+function pickColor(elmt){
+    did("colorpick").style.background = elmt.value;
+    changeColor(5, elmt.value);
+}
 
 function save(e){
     if(did("filename").value != ""){
@@ -402,7 +440,7 @@ function load(e){
 function openMenu(act){
     if(act == 1){
         if(did("menuBox").classList.contains("open")){
-
+            did("md3").classList.remove("active");
             did("menuBox").classList.remove("open");
         }else{
             did("menuBox").classList.add("open");
@@ -466,7 +504,7 @@ function autosave(){
         did("sindic").classList.add("visible");
         setTimeout(()=>{
             did("sindic").classList.remove("visible");
-        },1000);
+        },1500);
     }
 }
 
