@@ -138,7 +138,21 @@ temp.onmousemove = function(e){
 
 
 document.body.addEventListener("wheel",function(e){
-    // if(isRect){
+
+    setOrigin(e);
+
+    setTimeout(() => {
+        if(e.deltaY < 0){
+            zoomIn();
+        }else{
+            zoomOut();
+        }
+    }, 10);
+
+}, {passive:false});
+
+function setOrigin(e){
+    if(e.target.nodeName == "svg" && options.zoom > 20 && options.zoom < 300){
         e.preventDefault();
         let rect = did("canvas").getBoundingClientRect();
 
@@ -152,19 +166,16 @@ document.body.addEventListener("wheel",function(e){
         if(left < 0) left=0;
         if(left > 100) left=100;
 
-        did("canvas").style.transformOrigin = top + "% " + left+"%";
-        did("temp").style.transformOrigin = top + "% " + left+"%";
+        // did("canvas").style.transformOrigin = left + "% " + top+"%";
+        // did("temp").style.transformOrigin = left + "% " + top+"%";
 
-        if(e.deltaY < 0){
-            zoomIn();
-        }else{
-            zoomOut();
-        }
-        
-
-
-    // }
-}, {passive:false});
+        // setTimeout(() => {
+            did("canvas").style.transformOrigin = left + "% " + top+"%";
+            did("temp").style.transformOrigin = left + "% " + top+"%";
+        // }, 10);
+         
+    }
+}
 
 
 canvas.onmousemove = function(e){
@@ -737,6 +748,6 @@ function movePan(e){
 
 }
 
-function stopPan(){
+function stopPan(e){
     pan = false;
 }
