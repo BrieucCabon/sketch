@@ -4,6 +4,7 @@ class Path {
     constructor(chemin){
         this.pa = document.createElementNS('http://www.w3.org/2000/svg',"path");
         this.pa.setAttributeNS(null,"stroke",options.color);
+        this.pa.setAttributeNS(null,"stroke-width",options.size);
         if(isFill){
             this.pa.setAttribute("style","fill:"+options.color+" !important");
         }
@@ -11,6 +12,7 @@ class Path {
         if(isDash){
             this.pa.setAttributeNS(null,"class","dotted");
         }
+        // Mover (not used)
         // this.pa.onclick = function(e){Path.selectPath(e,this);};
 
     }

@@ -3,11 +3,19 @@ temp = document.getElementById('temp');
 
 canDraw = isLine = isRect = isCircle = isDelete = isDash = isStraight = isFill = isBucket = false;
 points = [];
-origin = mouse = tempTextMouse = {};
+origin = mouse = tempTextMouse = focuszoom = {};
 options = {
     color:"#000",
-    zoom : 100,
-    mode : 1
+    size : 6,
+    mode : 1,
+    night: false,
+    nightColor: "#000"
+};
+
+tf = {
+    x: 0,
+    y: 0,
+    zoom: 1
 };
 
 selection = {
@@ -67,9 +75,9 @@ temp.onmousemove = function(e){
     var midP;
     var tag = "";
     if(isDash){
-        tag = '<path class="dotted" d="';
+        tag = '<path style="stroke-width:'+options.size+'" class="dotted" d="';
     }else{
-        tag = '<path d="';
+        tag = '<path style="stroke-width:'+options.size+'" d="';
     }
 
     if(isStraight){
@@ -138,43 +146,86 @@ temp.onmousemove = function(e){
 
 
 document.body.addEventListener("wheel",function(e){
-
-    setOrigin(e);
-
-    setTimeout(() => {
+    e.preventDefault();
+    if(e.ctrlKey){
+        let bx = (e.clientX - tf.x) / tf.zoom;
+        let by = (e.clientY - tf.y) / tf.zoom;
+    
         if(e.deltaY < 0){
             zoomIn();
         }else{
-            zoomOut();
+            zoomOut();  
         }
-    }, 10);
+    
+        tf.x = e.clientX - (bx * tf.zoom);
+        tf.y = e.clientY - (by * tf.zoom);
+    
+        updateZoom();
+    }else{
+        tf.y -= e.deltaY;
+    }
+    
+    setTransform();
 
 }, {passive:false});
 
-function setOrigin(e){
-    if(e.target.nodeName == "svg" && options.zoom > 20 && options.zoom < 300){
-        e.preventDefault();
-        let rect = did("canvas").getBoundingClientRect();
+function updateZoom(){
+    did("zoomLabel").innerHTML = Math.round(tf.zoom * 100)+"%";
+    did("zoomsliderinner").style.width = ((tf.zoom * 100) * 100 / 300)+"%";
+}
 
-        let left = (e.pageX - rect.left);
-        let top = (e.pageY - rect.top);
 
-        top = top * 100 / rect.height;
-        left = left * 100 / rect.width;
-        if(top < 0) top=0;
-        if(top > 100) top=100;
-        if(left < 0) left=0;
-        if(left > 100) left=100;
-
-        // did("canvas").style.transformOrigin = left + "% " + top+"%";
-        // did("temp").style.transformOrigin = left + "% " + top+"%";
-
-        // setTimeout(() => {
-            did("canvas").style.transformOrigin = left + "% " + top+"%";
-            did("temp").style.transformOrigin = left + "% " + top+"%";
-        // }, 10);
-         
+function zoomIn(){
+    if(tf.zoom < 3){
+        tf.zoom = tf.zoom + 0.2;
     }
+    updateZoom();
+    setTransform();
+}
+function zoomOut(){
+    if(tf.zoom > 0.4){
+        tf.zoom = tf.zoom - 0.2;
+    }
+    updateZoom();
+    setTransform();
+}
+
+var panOrigin = null;
+var pan = false;
+function startPan(e){
+
+    if(e.buttons == 4){
+        e.preventDefault();
+        panOrigin = {
+            x: e.clientX, 
+            y: e.clientY,
+            tx: tf.x,
+            ty: tf.y,
+        };
+
+        pan = true;
+    }
+}
+
+function movePan(e){
+    if(pan && e.buttons == 4){
+        e.preventDefault();
+
+        tf.x = panOrigin.tx + (e.clientX - panOrigin.x);
+        tf.y = panOrigin.ty + (e.clientY - panOrigin.y);
+
+        setTransform();
+    }
+}
+
+function stopPan(e){
+    pan = false;
+}
+
+function setTransform(){
+    let transform = "translate(" +tf.x+"px,"+tf.y+"px) scale("+tf.zoom+")";
+    did("temp").style.transform = transform;
+    did("canvas").style.transform = transform;
 }
 
 
@@ -262,7 +313,7 @@ document.body.onkeydown = function(e){
         if(tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y){
             tempText.innerHTML += e.key;
         }else{
-            var txt = new Text(mouse.x,(mouse.y+20)).pa;
+            var txt = new Text(mouse.x,(mouse.y+10)).pa;
 
             tempText = txt;
             tempTextMouse = mouse;
@@ -306,25 +357,6 @@ function did(id){
 
 function toint(size){
     return size.replace("px","");
-}
-
-
-function zoomIn(){
-    if(options.zoom == 300) return;
-    options.zoom += 20;
-    did("zoomLabel").innerHTML = options.zoom+"%";
-    did("zoomsliderinner").style.width = (options.zoom * 100 / 300)+"%";
-    did("temp").style.transform = "scale("+ (options.zoom/100)+")";
-    did("canvas").style.transform = "scale("+ (options.zoom/100)+")";
-}
-
-function zoomOut(){
-    if(options.zoom == 20) return;
-    options.zoom = options.zoom -20;
-    did("zoomLabel").innerHTML = options.zoom+"%";
-    did("zoomsliderinner").style.width = (options.zoom * 100 / 300)+"%";
-    did("temp").style.transform = "scale("+ (options.zoom/100)+")";
-    did("canvas").style.transform = "scale("+ (options.zoom/100)+")";
 }
 
 
@@ -388,6 +420,9 @@ function changeTool(type){
 }
 
 function changeColor(id, col){
+    if(id == 1){
+        col = options.nightColor;
+    }
     if(id == 5 && col == ""){
         col = did("colorinput").value;
     }
@@ -688,6 +723,14 @@ function changePolice(elmt){
     police = elmt.value;
 }
 
+function changeSize(id, size){
+    options.size = size;
+    [1,2,3].forEach(x=>{
+        did("size"+x).classList.remove("active");
+        
+    });
+    did("size"+id).classList.add("active");
+}
 
 
 function getDefs(){
@@ -712,42 +755,19 @@ function getDefsLight(){
     </defs>`;
 }
 
-
-var panOrigin = null;
-var pan = false;
-function startPan(e){
-
-    if(e.buttons == 4){
-        e.preventDefault();
-        panOrigin = {
-            x: e.pageX - did("temp").style.left.replace("px",""), 
-            y: e.pageY - did("temp").style.top.replace("px","")
-        };
-
-        pan = true;
+function switchNight(){
+    if(options.night){
+        did("color1").querySelector(".colorblock").style.background = "#000";
+        options.nightColor = "#000";
+        document.querySelector("html").classList.remove("night");
+        if(options.color == "#eee") options.color = "#000";
+        options.night = false;
+        
+    }else{
+        did("color1").querySelector(".colorblock").style.background = "#eee";
+        options.nightColor = "#eee";
+        document.querySelector("html").classList.add("night");
+        if(options.color == "#000") options.color = "#eee";
+        options.night = true;
     }
-}
-
-function movePan(e){
-    if(pan && e.buttons == 4){
-        e.preventDefault();
-
-        let left = did("temp").style.left.replace("px","");
-        let top = did("temp").style.top.replace("px","");
-
-        if(left == ""){left = 0;}
-        if(top == ""){top = 0;}
-  
-        did("temp").style.left = (e.pageX - panOrigin.x) +"px";
-        did("canvas").style.left = (e.pageX - panOrigin.x) +"px";  
-
-        did("temp").style.top = (e.pageY - panOrigin.y) +"px";
-        did("canvas").style.top = (e.pageY - panOrigin.y) +"px";
-
-    }
-
-}
-
-function stopPan(e){
-    pan = false;
 }

@@ -3,14 +3,16 @@
     --primary-shade: #152453;
     --primary-tint: #e7e7f4;
     --primary-tone: #787883;
+    --background: #ededed;
+    --white: #fff;
 
-    /* --light: #e5edf5;
-
-    --gray: #6d6e87; */
 }
+
+
+
 body {
     margin: 0;
-    background: #222222;
+    background: var(--background);
     font-family: roboto;
     position: fixed;
     width: 100%;
@@ -25,7 +27,7 @@ body {
 }
 
 #canvas {
-    background: #fff;
+    background: var(--white);
 }
 
 #canvas.onfront {
@@ -44,13 +46,13 @@ body {
 
 ::-webkit-scrollbar-track {
     /* box-shadow: inset 0 0 5px rgba(0,0,0,0.2); */
-    background: #fff;
+    background: var(--white);
 }
 
 path {
     stroke-linejoin: round;
     stroke-linecap: round;
-    stroke-width: 6;
+    /* stroke-width: 6; */
     fill: none;
 }
 
@@ -99,7 +101,7 @@ text:hover {
     left: 10px;
     user-select: none;
     z-index: 5;
-    background: #fff;
+    background: var(--white);
     box-shadow: 0 0rem 1rem rgb(0 0 0 / 25%);
     border-radius: 5px;
     padding: 0.5rem;
@@ -203,7 +205,7 @@ text:hover {
     position: absolute;
     overflow: hidden;
     border-radius: 50px;
-    background: #fff;
+    background: var(--white);
     color: var(--primary-shade);
     top: -2px;
     right: -2px;
@@ -285,7 +287,7 @@ text:hover {
 #menuBox{
     position: fixed;
     top: 80px;
-    background: #fff;
+    background: var(--white);
     box-shadow: 0 2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.2);
     box-shadow: 0 .2rem .5rem rgb(0 0 0 / 20%);
     box-shadow: 0 0px 1rem rgb(0 0 0 / 25%);
@@ -317,6 +319,7 @@ text:hover {
     grid-template-columns: auto 1fr;
     grid-gap: 1rem;
     font-size: 14px;
+    align-items: center;
 }
 .menu-item:hover{
     background: var(--primary-tint);
@@ -334,17 +337,16 @@ text:hover {
 
 .ioBox {
     position: fixed;
-    background: #fff;
-    box-shadow: 0 .2rem .5rem rgb(0 0 0 / 20%);
-    border-radius: 1rem;
-    bottom: 15px;
-    left: 75px;
+    background: var(--white);
+    box-shadow:  0 0rem 1rem rgb(0 0 0 / 25%);
+    border-radius: 5px;
+    top: 80px;
+    left: 80px;
     z-index: 10;
-    transition: 0.2s;
-    transform: scale(0);
+    transition: 0.3s ,0.2s opacity;
+    transform: translate(-70px,-70px) scale(0);
     opacity: 0;
-    /* padding: 45px 30px 30px; */
-    transform-origin: center left;
+    transform-origin: top left;
 }
 
 #saveBox .ioBox-content {
@@ -353,17 +355,13 @@ text:hover {
     grid-gap: 30px;
 }
 
-#optionBox {
-    bottom: 10rem;
-}
-
 .ioBox.open {
-    transform: scale(1);
+    transform: translate(0%,0%) scale(1);
     opacity: 1;
 }
 
 img#preview {
-    border: 2px solid #cccccc;
+    border: 2px solid var(--primary-tint);
     max-height: 230px;
     display: inline-block;
     border-radius: 3px;
@@ -376,16 +374,16 @@ img#preview {
     height: 40px;
     text-align: center;
     cursor: pointer;
-    color: #bbb;
+    color: var(--primary-tone);
     line-height: 55px;
 }
 
 .closebtn:hover {
-    color: #999;
+    color: var(--primary-shade);
 }
 
 .closebtn:hover i {
-    background: #e5edf5;
+    /* background: #e5edf5; */
 }
 
 .closebtn i {
@@ -395,33 +393,33 @@ img#preview {
 }
 
 .textbox {
-    border: 2px solid #ccc;
+    border: 2px solid var(--primary-tint);
     font-size: 18px;
     padding: 5px;
     border-radius: 3px;
 }
 
 .btn {
-    background: none;
-    border: none;
+    background: var(--primary);
     padding: 10px 15px;
     font-size: 16px;
     font-family: roboto;
     text-align: center;
     transition: 0.15s;
     user-select: none;
-    border: 2px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
+    color: var(--white);
 }
 
 .btn:hover {
-    background: #eee;
+    background: var(--primary-shade);
     cursor: pointer;
 }
 
 .sealbtn {
     pointer-events: none;
-    color: #ccc;
+    color: var(--primary-tint);
+    background: var(--primary-tone);
 }
 
 input#files.ok::before {
@@ -432,7 +430,7 @@ input#files.ok::before {
 
 input#files::before {
     content: "Ouvrir un fichier";
-    background: #fff;
+    background: var(--white);
     position: absolute;
     width: 100%;
     height: 45px;
@@ -464,17 +462,17 @@ input#files {
 .filename_div {
     margin-bottom: 5px;
     font-variant: all-small-caps;
-    color: #ccc;
+    color: var(--primary-tone);
     font-size: 18px;
 }
 
 .radios input {
     -webkit-appearance: none;
-    background: #dadada;
+    background: var(--primary-tint);
     width: 16px;
     height: 16px;
     border-radius: 4px;
-    vertical-align: -4px;
+    vertical-align: -5px;
     outline: none;
     cursor: pointer;
     transition: 0.05s;
@@ -503,13 +501,12 @@ input#files {
     left: 270px;
     padding: 20px 10px 20px;
     color: var(--primary-tone);
-    background: #fff;
+    background: var(--white);
     width: 210px;
     opacity: 0;
     visibility: hidden;
     transition: 0.2s;
     user-select: none;
-    /* pointer-events: none; */
     box-shadow: 0 0rem 1rem rgb(0 0 0 / 25%);
     border-radius: 5px;
     z-index: 5;
@@ -532,7 +529,7 @@ input#files {
     text-align: center;
     margin-top: 10px;
     box-shadow: 0 3px;
-    background: #fff;
+    background: var(--white);
 }
 
 .helpkey:first-of-type {
@@ -561,6 +558,7 @@ hr {
 .saveoption {
     display: none;
     min-height: 22px;
+    color: var(--primary-tone);
 }
 
 .saveoption.optvisible {
@@ -570,7 +568,7 @@ hr {
 #savetype {
     width: 100%;
     padding: 5px;
-    border: 2px solid #ccc;
+    border: 2px solid var(--primary-tint);
     border-radius: 4px;
     margin-bottom: 15px;
 }
@@ -644,9 +642,46 @@ hr {
 .ioBox-title {
     font-weight: 500;
     font-size: 18px;
-    color: #444;
+    color: var(--primary-shade);
 }
 
 .ioBox-content {
     padding: 0 2rem 2rem;
 }
+
+
+
+
+    html.night{
+        --primary: #003c99;
+        --primary-shade: #c9cae6;
+        --primary-tint: #0a0a16;
+        --primary-tone: #787883;
+        --background: #111;
+        --white: #282828;
+    }
+    html.night .toolbar {
+        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+    }
+    html.night #menuBox {
+        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+    }
+    
+    html.night .help {
+        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+    }
+    
+    html.night .ioBox {
+        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+    }
+    html.night .btn {
+        color: var(--primary-shade);
+    }
+    html.night .btn:hover {
+        background: var(--primary-tint);
+    }
+    
+    html.night input, html.night select {
+        background: var(--background);
+        color: #eee;
+    }
