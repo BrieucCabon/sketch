@@ -5,6 +5,9 @@
     <title>Sketch</title>
     <link rel="shortcut icon" href="ico.png">
     <link rel="stylesheet" href="styles/style.css">
+    <script defer src="scripts/utils.js" charset="utf-8"></script>
+    <script defer src="scripts/template.js" charset="utf-8"></script>
+    <script defer src="scripts/fivedb.js" charset="utf-8"></script>
     <script defer src="scripts/classes.js" charset="utf-8"></script>
     <script defer src="scripts/script.js" charset="utf-8"></script>
     <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
@@ -15,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
 </head>
 <body onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()">
+    <!-- onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()" -->
     <a id="dl" download style="display:none"></a>
     <svg id="canvas"></svg>
     <svg id="temp"></svg>
@@ -29,14 +33,39 @@
     <span class="title">Sketch</span>
 
     <!-- <div class="menubar">
-        <div class="menu-item" onclick="openSave()">Sauvegarder</div>
+        <div class="menu-item" onclick="openExport()">Sauvegarder</div>
         <div class="menu-item" onclick="openLoad()">Charger</div>
         <div class="menu-item" onclick="openOption()">Options</div>
     </div> -->
 
     <div class="toolbar toolbar_top">
-        <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-symbols-rounded">menu</i></div>
+        <span class="title">Sketch</span>
+
         <div class="separator"></div>
+
+        <div class="tool" onclick="openLoad()" title="Ouvrir / sauvegarder">
+            <i class="material-symbols-rounded">folder</i>
+        </div>
+        <div class="tool" onclick="openExport()" title="Exporter">
+            <i class="material-symbols-rounded">file_upload</i>
+        </div>
+        <div class="tool" onclick="openOption()" title="Sauvegarde">
+            <i class="material-symbols-rounded">settings</i>
+        </div>
+        <div class="tool" onclick="showHelp()" title="Sauvegarde">
+            <i class="material-symbols-rounded">help</i>
+        </div>
+
+        <div class="separator"></div>
+
+
+        <div class="toolcls tool active" id="md1" onclick="changeMode(1)" title="Crayon"><i class="material-symbols-rounded">mode_edit</i></div>
+        <div class="toolcls tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-symbols-rounded">gradient</i></div>
+        <div class="toolcls tool" id="md2" onclick="changeMode(2)" title="Remplissage"><i class="material-symbols-rounded">format_color_fill</i></div>
+        <!-- <div class="tool" id="md2" onclick="changeMode(2)"><i class="material-symbols-rounded" id="palette">color_lens</i></div> -->
+
+        <div class="separator"></div>
+
         <div class="zoombar">
             <div class="pointer" onclick='zoomOut(event)'><i class="material-symbols-rounded">remove</i></div>
             <div class="zoomslider">
@@ -46,8 +75,10 @@
             <div class="pointer" onclick='zoomIn()'><i class="material-symbols-rounded">add</i></div>
             <!-- <div class="pointer" onclick='showHelp()'><i class="material-symbols-rounded">help_outline</i></div> -->
         </div>
+    </div>
 
-        <div class="separator"></div>
+    <div class="toolbar toolbar_left">
+        <!-- <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-symbols-rounded">menu</i></div> -->
 
         <div class="tool" id="size1" onclick="changeSize(1,2)" title="Diamètre">
             <i class="material-symbols-rounded" style="font-size: 12px">circle</i>
@@ -95,20 +126,15 @@
 
     </div>
     
-    <div class="toolbar toolbar_left">
-        <div class="toolcls tool active" id="md1" onclick="changeMode(1)" title="Crayon"><i class="material-symbols-rounded">mode_edit</i></div>
-        <div class="toolcls tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-symbols-rounded">gradient</i></div>
-        <div class="toolcls tool" id="md2" onclick="changeMode(2)" title="Remplissage"><i class="material-symbols-rounded">format_color_fill</i></div>
-        <!-- <div class="tool" id="md2" onclick="changeMode(2)"><i class="material-symbols-rounded" id="palette">color_lens</i></div> -->
-    </div>
+    
 
-    <div id="menuBox">
+    <!-- <div id="menuBox">
         <div class="menu-title">Menu</div>
-        <div class="menu-item" onclick="openSave()"><i class="material-symbols-rounded">download</i> Sauvegarder</div>
+        <div class="menu-item" onclick="openExport()"><i class="material-symbols-rounded">download</i> Sauvegarder</div>
         <div class="menu-item" onclick="openLoad()"><i class="material-symbols-rounded">file_upload</i> Charger</div>
         <div class="menu-item" onclick="openOption()"><i class="material-symbols-rounded">settings</i> Options</div>
         <div class="menu-item" onclick="showHelp()"><i class="material-symbols-rounded">help</i> Aide</div>
-    </div>
+    </div> -->
 
     <div class="help" id="help">
         <div class="menu-title">Aide</div>
@@ -149,8 +175,8 @@
 
     <div id="saveBox" class="ioBox">
         <div class="ioBox-header">
-            <div class="ioBox-title">Sauvegarder</div>
-            <div class="closebtn" onclick="openSave()"><i class="material-symbols-rounded">close</i></div>
+            <div class="ioBox-title">Exporter</div>
+            <div class="closebtn" onclick="openExport()"><i class="material-symbols-rounded">close</i></div>
         </div>
         <div class="ioBox-content">
             <div>
@@ -196,16 +222,53 @@
 
     <div id="loadBox" class="ioBox">
         <div class="ioBox-header">
-            <div class="ioBox-title">Charger</div>
+            <div class="ioBox-title">Ouvrir / Sauvegarder</div>
             <div class="closebtn" onclick="openLoad()"><i class="material-symbols-rounded">close</i></div>
         </div>
         <div class="ioBox-content">
-            <div class="filename_div">Sélectionner un fichier</div>
+            <!-- <div class="filename_div">Sélectionner un fichier</div>
             <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
             <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
             <hr>
             <div class="filename_div">Charger la sauvegarde auto</div>
-            <div class="btn" onclick="loadAutosave()">Charger</div>
+            <div class="btn" onclick="loadAutosave()">Charger</div> -->
+
+            <div class="filename_div">Sauvegarder dans le stockage local</div>
+            <div class="saveButtons">
+                <input class="textbox" type="text" id="savelocalfilename" value="" placeholder="Nom du fichier">    
+                <div class="btn" onclick="saveLocal()">Sauvegarder</div>
+            </div>
+            
+            <br>
+            <div class="separator horizon"></div>
+            <br>
+            <div class="filename_div">Charger depuis le stockage local</div>
+            <div class="listFiles">
+                <div class="file header">
+                    <div>Nom</div>
+                    <div>Taille</div>
+                    <div>Date</div>
+                </div>
+                <div id="fileSpawn">
+
+                    <div class="file">
+                        <input type="radio" name="files" onclick="selectSaveFile()" value="[ID]">
+                        <div class="filename">[NAME]</div>
+                        <div>[SIZE]</div>
+                        <div>[DATE]</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="loadButtons">
+                <div class="btn" onclick="confirmAction('confirmAutosave')">Charger autosave</div>
+                <div></div>
+                <div class="btn sealable sealbtn btndelete" onclick="confirmAction('confirmDeleteLocal')"><i class="material-symbols-rounded">delete</i> </div>
+                <div class="btn sealable sealbtn" onclick="confirmAction('confirmOverwrite')">Ecraser</div>
+                <div class="btn sealable sealbtn" onclick="confirmAction('confirmLoadLocal')">Charger</div>
+
+            </div>
         </div>
     </div>
 
@@ -233,32 +296,12 @@
         </div>
     </div>
 
-    <!-- <div class="colorbar open" id="toolbar">
-        <div class="color" id="toolDash" onclick="changeTool('dash')">
-            <i class="material-symbols-rounded" style="color:black">power_input</i>
+    <div id="confirmBox">
+        <div class="confirm_text">Etes-vous sûr ?</div>
+        <div class="confirmButton">
+            <div class="btn cancel" onclick="cancelConfirm()">Annuler</div>
+            <div class="btn exec" onclick="execConfirm()">Confirmer</div>
         </div>
-        <div class="color" id="toolStra" onclick="changeTool('straight')">
-            <i class="material-symbols-rounded" style="color:black">straighten</i>
-        </div>
-        <div class="color" id="toolFill" onclick="changeTool('fill')">
-            <i class="material-symbols-rounded" style="color:black">tonality</i>
-        </div>
-        <div class="color" onclick="changeColor('black')">
-            <i class="material-symbols-rounded" style="color:black">opacity</i>
-        </div>
-        <div class="color" onclick="changeColor('indianred')">
-            <i class="material-symbols-rounded" style="color:indianred">opacity</i>
-        </div>
-        <div class="color" onclick="changeColor('darkseagreen')">
-            <i class="material-symbols-rounded" style="color:darkseagreen">opacity</i>
-        </div>
-        <div class="color" onclick="changeColor('steelblue')">
-            <i class="material-symbols-rounded" style="color:steelblue">opacity</i>
-        </div>
-    </div> -->
-
-    <div class="colorbar" id="colorbar">
-        
     </div>
 
     <style id="dynStyle">text{font-family: permanent marker;}</style>

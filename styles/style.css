@@ -5,6 +5,7 @@
     --primary-tone: #787883;
     --background: #ededed;
     --white: #fff;
+    --red : #e15252;
 
 }
 
@@ -78,7 +79,7 @@ text:hover {
 .title {
     font-family: damion;
     font-size: 32px;
-    color: #3ba49e;
+    color: var(--primary);
     user-select: none;
     pointer-events: none;
     z-index: 5;
@@ -344,7 +345,7 @@ text:hover {
     left: 80px;
     z-index: 10;
     transition: 0.3s ,0.2s opacity;
-    transform: translate(-70px,-70px) scale(0);
+    transform: scale(0);
     opacity: 0;
     transform-origin: top left;
 }
@@ -356,8 +357,16 @@ text:hover {
 }
 
 .ioBox.open {
-    transform: translate(0%,0%) scale(1);
+    transform: scale(1);
     opacity: 1;
+}
+
+
+#saveBox {
+    transform-origin: 50px -20px;
+}
+#loadBox {
+    transform-origin: 50px -20px;
 }
 
 img#preview {
@@ -409,11 +418,19 @@ img#preview {
     user-select: none;
     border-radius: 5px;
     color: var(--white);
+    cursor: pointer;
+    border: none;
 }
 
 .btn:hover {
-    background: var(--primary-shade);
-    cursor: pointer;
+    box-shadow: 0 0 0px 2px var(--primary-tint);
+}
+
+.btndelete{
+    padding: 0px 10px;
+    display: grid;
+    background: #e15252;
+    align-items: center;
 }
 
 .sealbtn {
@@ -582,6 +599,12 @@ hr {
     background: var(--primary-tint);
 }
 
+.toolbar_left .separator, .separator.horizon {
+    height: 1px;
+    width: 100%;
+    background: var(--primary-tint);
+}
+
 
 .save-indicator {
     position: fixed;
@@ -651,37 +674,150 @@ hr {
 
 
 
+.listFiles {
+    width: 600px;
+    background: var(--background);
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
 
-    html.night{
-        --primary: #003c99;
-        --primary-shade: #c9cae6;
-        --primary-tint: #0a0a16;
-        --primary-tone: #787883;
-        --background: #111;
-        --white: #282828;
-    }
-    html.night .toolbar {
-        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
-    }
-    html.night #menuBox {
-        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
-    }
-    
-    html.night .help {
-        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
-    }
-    
-    html.night .ioBox {
-        box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
-    }
-    html.night .btn {
-        color: var(--primary-shade);
-    }
-    html.night .btn:hover {
-        background: var(--primary-tint);
-    }
-    
-    html.night input, html.night select {
-        background: var(--background);
-        color: #eee;
-    }
+.file {
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr 80px 110px;
+    grid-gap: 1rem;
+    border-radius: 5px;
+    position: relative;
+    font-size: 13px;
+}
+
+.file:hover {
+    background: var(--primary-tint);
+}
+
+.file input[type="radio"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+}
+
+.file:has(input:checked) {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.file.header {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.file.header:hover {
+    background: none;
+}
+
+.filename {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.saveButtons {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 1rem;
+    padding: 0 0 1rem;
+}
+
+.loadButtons {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    grid-gap: 1rem;
+}
+
+
+#fileSpawn {
+    height: 150px;
+    overflow: auto;
+}
+#confirmBox {
+    position: fixed;
+    width: 300px;
+    z-index: 10;
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0rem 1rem 500rem rgb(0 0 0 / 50%), 0 0rem 1rem rgb(0 0 0 / 25%);
+    left: 0;
+    right: 0;
+    margin: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+    transition: 0.2s;
+    top: 40%;
+}
+#confirmBox.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.confirmButton {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 1rem;
+    margin-top: 1rem;
+}
+
+.confirmButton .cancel {
+    background: var(--primary-tone);
+}
+
+.confirm_text {
+    font-size: 20px;
+    color: var(--primary-shade);
+    padding: 1rem 0;
+    text-align: center;
+}
+
+
+
+
+
+
+
+html.night{
+    --primary: #003c99;
+    --primary-shade: #c9cae6;
+    --primary-tint: #0a0a16;
+    --primary-tone: #787883;
+    --background: #111;
+    --white: #282828;
+}
+html.night .toolbar {
+    box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+}
+html.night #menuBox {
+    box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+}
+
+html.night .help {
+    box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+}
+
+html.night .ioBox {
+    box-shadow: 0 0rem 0 1px var(--primary-tint),0 0px 1rem rgb(0 0 0 / 25%);
+}
+html.night .btn {
+    color: var(--primary-shade);
+}
+html.night .btn:hover {
+    background: var(--primary-tint);
+}
+
+html.night input, html.night select {
+    background: var(--background);
+    color: #eee;
+}

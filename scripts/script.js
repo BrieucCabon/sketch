@@ -31,6 +31,78 @@ tempMouse = null;
 
 police = "permanent marker";
 
+currentSaveFile = null;
+
+
+confirmActions = {
+    currentConfirmAction: null,
+
+    confirmAutosave:{
+        text: "Confirmer le chargement de la sauvegarde automatique ?",
+        textExec: "Charger",
+        fonction: ()=>{
+            loadAutosave();
+        }
+    },
+    confirmOverwrite:{
+        text: "Confirmer l'enregistrement sur une sauvegarde existante ?",
+        textExec: "Ecraser",
+        colorExec: "var(--red)",
+        fonction: ()=>{
+            saveOverwrite();
+        }
+    },
+    confirmLoadLocal:{
+        text: "Confirmer le chargement de la sauvegarde ?",
+        textExec: "Charger",
+        fonction: ()=>{
+            loadFromLocal();
+        }
+    },
+    confirmDeleteLocal:{
+        text: "Confirmer la suppression ?",
+        textExec: "Supprimer",
+        colorExec: "var(--red)",
+        fonction: ()=>{
+            deleteLocalSave();
+        }
+    }
+}
+
+const SCHEMA = [
+    {
+        name: "files",
+        fields: [
+            { name: "name", unique: false },
+            { name: "content", unique: false },
+            { name: "size", unique: false },
+            { name: "date", unique: false },
+        ]
+    },
+        
+];
+
+const db = new FiveDB("bc-sketch", 1, SCHEMA, ()=>{
+   displayFiles();
+});
+
+
+function displayFiles(){
+    did("fileSpawn").innerHTML = "";
+
+    db.files.get().then(data=>{
+        data.forEach(d => {
+            fillAndLoad(filesTemplates,{
+                "ID":d.id,
+                "NAME": d.name,
+                "SIZE": d.size,
+                "DATE": formateDate("full",d.date)
+            },
+            did("fileSpawn"));
+        });
+    });
+}
+
 temp.onmousedown = function(e){
     if(e.button == 0 && options.mode == 1){
         canDraw = true;
@@ -193,7 +265,7 @@ function zoomOut(){
 var panOrigin = null;
 var pan = false;
 function startPan(e){
-
+    console.log("OPAN");
     if(e.buttons == 4){
         e.preventDefault();
         panOrigin = {
@@ -351,10 +423,6 @@ function condTextKeyCode(code){
     return false;
 }
 
-function did(id){
-    return document.getElementById(id);
-}
-
 function toint(size){
     return size.replace("px","");
 }
@@ -368,11 +436,11 @@ function changeMode(md){
     }
 
     did("canvas").classList.remove("onfront");
-    did("colorbar").classList.remove("open");
+    // did("colorbar").classList.remove("open");
     // did("toolbar").classList.remove("open");
     did("md"+md).classList.add("active");
     if(md != 3){
-        openMenu(0);
+        //openMenu(0);
 
     }
 
@@ -464,7 +532,7 @@ function save(e){
                 exporterimg("jpg");
             }
         }
-        openSave();
+        openExport();
     }
 }
 function load(e){
@@ -483,6 +551,76 @@ function load(e){
 
 }
 
+
+function saveLocal(){
+    let name = did("savelocalfilename").value;
+    if(name != ""){
+        let data = compress(did('canvas').innerHTML);
+        let size = data.length / 1000;
+        if(size >= 1000){
+            size = (Math.round(size / 1000 * 100) /100) + " Mo"
+        }else{
+            size = (Math.round(size * 100) /100) + " Ko";
+        }
+        db.files.add({
+            name: name,
+            content: data,
+            date: formateDate("timestamp"),
+            size: size
+        })
+        .then(()=>{
+            displayFiles();
+            did("sindic").classList.add("visible");
+            setTimeout(()=>{
+                did("sindic").classList.remove("visible");
+            },1500);
+    
+        });
+
+    }
+}
+
+function saveOverwrite(){
+    let data = compress(did('canvas').innerHTML);
+    let size = data.length / 1000;
+    if(size >= 1000){
+        size = (Math.round(size / 1000 * 100) /100) + " Mo"
+    }else{
+        size = (Math.round(size * 100) /100) + " Ko";
+    }
+    db.files.update({
+        content: data,
+        date: formateDate("timestamp"),
+        size: size
+    }, currentSaveFile)
+    .then(()=>{
+        displayFiles();
+        did("sindic").classList.add("visible");
+        setTimeout(()=>{
+            did("sindic").classList.remove("visible");
+        },1500);
+
+    });
+}
+
+function loadFromLocal(){
+    db.files.get(currentSaveFile).then(data =>{
+        did('canvas').innerHTML = uncompress(data.content);
+    });
+}
+
+function deleteLocalSave(){
+    db.files.delete(currentSaveFile);
+    currentSaveFile = null;
+    Array.from(qs('.loadButtons').children).forEach(n => {
+        if(n.classList.contains("sealable")){
+            n.classList.add("sealbtn");
+        }
+    });
+    displayFiles();
+}
+
+
 function openMenu(act){
     if(act == 1){
         if(did("menuBox").classList.contains("open")){
@@ -497,8 +635,8 @@ function openMenu(act){
     }
 }
 
-function openSave(){
-    openMenu(0);
+function openExport(){
+    //openMenu(0);
     if(did("saveBox").classList.contains("open")){
         did("saveBox").classList.remove("open");
     }else{
@@ -507,9 +645,9 @@ function openSave(){
     }
 }
 function openLoad(){
-    did("files").classList.remove("ok");
-
-    openMenu(0);
+    // did("files").classList.remove("ok");
+    changeMode(0);
+    //openMenu(0);
     if(did("loadBox").classList.contains("open")){
         did("loadBox").classList.remove("open");
     }else{
@@ -517,7 +655,7 @@ function openLoad(){
     }
 }
 function openOption(){
-    openMenu(0);
+    //openMenu(0);
     if(did("optionBox").classList.contains("open")){
         did("optionBox").classList.remove("open");
     }else{
@@ -542,7 +680,7 @@ function showHelp(){
 window.addEventListener("unload",autosave);
 
 function autosave(){
-    openMenu(0);
+    //openMenu(0);
     var value = did("canvas").innerHTML;
     if(value != ""){
         var packValue = compress(value);
@@ -555,7 +693,7 @@ function autosave(){
 }
 
 function loadAutosave(){
-    openMenu(0);
+    //openMenu(0);
     var packValue = localStorage.getItem("sk_autosave");
 
     if(packValue != null){
@@ -770,4 +908,48 @@ function switchNight(){
         if(options.color == "#000") options.color = "#eee";
         options.night = true;
     }
+}
+
+function confirmAction(action){
+    confirmActions.currentConfirmAction = action;
+
+    let a = confirmActions[action];
+    if(typeof a.text != "undefined"){
+        did("confirmBox").querySelector(".confirm_text").innerHTML = a.text;
+    }else{
+        did("confirmBox").querySelector(".confirm_text").innerHTML = "Confirmez-vous ?";
+    }
+    if(typeof a.textExec != "undefined"){
+        did("confirmBox").querySelector(".exec").innerHTML = a.textExec;
+    }else{
+        did("confirmBox").querySelector(".exec").innerHTML = "Confirmer";
+    }
+    if(typeof a.colorExec != "undefined"){
+        did("confirmBox").querySelector(".exec").style.background = a.colorExec;
+    }else{
+        did("confirmBox").querySelector(".exec").style.background = "var(--primary)";
+    }
+
+    did("confirmBox").classList.add("visible");
+
+}
+
+function execConfirm(){
+    did("confirmBox").classList.remove("visible");
+    confirmActions[confirmActions.currentConfirmAction].fonction();
+}
+
+function cancelConfirm(){
+    did("confirmBox").classList.remove("visible");
+}
+
+function selectSaveFile(id){
+    if(currentSaveFile == null){
+        Array.from(qs('.loadButtons').children).forEach(n => {
+            if(n.classList.contains("sealbtn")){
+                n.classList.remove("sealbtn");
+            }
+        });
+    }
+    currentSaveFile = id;
 }
