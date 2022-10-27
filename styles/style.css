@@ -13,11 +13,17 @@
 
 body {
     margin: 0;
-    background: var(--background);
     font-family: roboto;
     position: fixed;
     width: 100%;
     height: 100%;
+}
+
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: var(--background);
 }
 
 #canvas,#temp {
@@ -53,8 +59,11 @@ body {
 path {
     stroke-linejoin: round;
     stroke-linecap: round;
-    /* stroke-width: 6; */
     fill: none;
+}
+/* compat with old save */
+path:not([stroke-width]) {
+    stroke-width: 6;
 }
 
 path:hover {
@@ -65,6 +74,7 @@ text {
     font-family: permanent marker, cursive;
     font-size: 40px;
     user-select: none;
+    font-weight: 500;
 }
 
 text:hover {
@@ -362,11 +372,14 @@ text:hover {
 }
 
 
-#saveBox {
-    transform-origin: 50px -20px;
-}
 #loadBox {
     transform-origin: 50px -20px;
+}
+#saveBox {
+    transform-origin: 100px -20px;
+}
+#optionBox {
+    transform-origin: 150px -20px;
 }
 
 img#preview {
@@ -423,7 +436,7 @@ img#preview {
 }
 
 .btn:hover {
-    box-shadow: 0 0 0px 2px var(--primary-tint);
+    opacity: 0.9;
 }
 
 .btndelete{
@@ -439,13 +452,13 @@ img#preview {
     background: var(--primary-tone);
 }
 
-input#files.ok::before {
+/* input#files.ok::before {
     content: "Fichier importé";
     border-color: #4CAF50;
     color: #4CAF50;
-}
+} */
 
-input#files::before {
+/* input#files::before {
     content: "Ouvrir un fichier";
     background: var(--white);
     position: absolute;
@@ -456,16 +469,37 @@ input#files::before {
     text-align: center;
     color: #555;
     box-sizing: border-box;
+} */
+
+.remoteFileLoader input#files {
+    position: absolute;
+    width: 100%;
+    outline: none;
+    opacity: 0;
+    top: 0;
+    height: 100%;
 }
 
-input#files {
-    height: 45px;
-    font-family: roboto;
+.remoteFileLoader{
     position: relative;
+    margin-bottom: 2rem;
+    will-change: transform;
+}
+
+.fileLoader {
+    background: var(--white);
     width: 100%;
-    margin-top: 5px;
-    margin-bottom: 20px;
-    outline: none;
+    height: 45px;
+    border: 2px dashed #555;
+    line-height: 42px;
+    text-align: center;
+    color: #555;
+    box-sizing: border-box;
+}
+
+.fileLoader.ok {
+    border-color: #4CAF50;
+    color: #4CAF50;
 }
 
 .dotted {
@@ -514,8 +548,8 @@ input#files {
 
 .help {
     position: fixed;
-    top: 80px;
-    left: 270px;
+    top: 10px;
+    right: 10px;
     padding: 20px 10px 20px;
     color: var(--primary-tone);
     background: var(--white);
@@ -526,7 +560,6 @@ input#files {
     user-select: none;
     box-shadow: 0 0rem 1rem rgb(0 0 0 / 25%);
     border-radius: 5px;
-    z-index: 5;
 }
 
 .help.active {
@@ -689,6 +722,7 @@ hr {
     border-radius: 5px;
     position: relative;
     font-size: 13px;
+    color: var(--primary-shade);
 }
 
 .file:hover {
@@ -704,8 +738,8 @@ hr {
 }
 
 .file:has(input:checked) {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--primary-tone);
+    color: var(--primary-shade);
 }
 
 .file.header {
@@ -743,24 +777,36 @@ hr {
 }
 #confirmBox {
     position: fixed;
-    width: 300px;
+    width: 100%;
+    height: 100%;
     z-index: 10;
-    background: var(--white);
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 0rem 1rem 500rem rgb(0 0 0 / 50%), 0 0rem 1rem rgb(0 0 0 / 25%);
-    left: 0;
-    right: 0;
-    margin: auto;
     opacity: 0;
     visibility: hidden;
-    transform: scale(0);
     transition: 0.2s;
-    top: 40%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.25);
 }
 #confirmBox.visible {
     opacity: 1;
     visibility: visible;
+}
+.confirmBoxInner {
+    position: absolute;
+    width: 300px;
+    box-shadow: 0 0rem 1rem rgb(0 0 0 / 25%);
+    margin: auto;
+    background: var(--white);
+    padding: 1rem;
+    top: 40%;
+    left: 0;
+    right: 0;
+    border-radius: 5px;
+    transform: scale(0);
+    transition: 0.2s;
+}
+
+#confirmBox.visible .confirmBoxInner {
     transform: scale(1);
 }
 
@@ -813,11 +859,17 @@ html.night .ioBox {
 html.night .btn {
     color: var(--primary-shade);
 }
-html.night .btn:hover {
+/* html.night .btn:hover {
     background: var(--primary-tint);
-}
+} */
 
 html.night input, html.night select {
     background: var(--background);
     color: #eee;
+}
+
+
+.my-1{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

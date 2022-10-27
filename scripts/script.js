@@ -26,6 +26,7 @@ selection = {
 tempLoad ="";
 
 perfCount = 0;
+perfLevelCount = 0;
 
 tempMouse = null;
 
@@ -107,6 +108,7 @@ temp.onmousedown = function(e){
     if(e.button == 0 && options.mode == 1){
         canDraw = true;
         perfCount = 0;
+        perfLevelCount = 0;
         origin = { x: e.offsetX, y: e.offsetY };
         path = "M"+origin.x+","+origin.y;
         rand1 = Math.floor((Math.random() * 10)-5);
@@ -129,6 +131,7 @@ temp.onmouseup = function(e){
         }
         temp.innerHTML ="";
         points = [];
+        console.log(perfLevelCount);
     }
 };
 
@@ -161,6 +164,20 @@ temp.onmousemove = function(e){
     var m = "M";
     if(isFill){
         m = "L";
+    }
+
+    // perfLevel : augmenter pour réduire le nombre de tik lors du tracé
+    let lastP = points[points.length -1];
+    let perfLevel = 2;
+
+    if(lastP){
+        let diff = lastP.x - mouse.x;
+        diff += lastP.y - mouse.y;
+        diff = Math.abs(diff);
+        perfLevel = (6 - diff);
+        if(perfLevel < 2){
+            perfLevel = 2;
+        }
     }
 
     if(isLine){
@@ -198,7 +215,7 @@ temp.onmousemove = function(e){
         path = "M"+origin.x+","+midy+" Q"+origin.x+","+origin.y+","+midx+","+origin.y+" Q"+mouse.x+","+origin.y+","+mouse.x+","+midy+" Q"+mouse.x+","+mouse.y+","+midx+","+mouse.y+" Q"+origin.x+","+mouse.y+","+origin.x+","+midy;
         temp.innerHTML = tag+path+'"/>';
 
-    }else if((perfCount % 3) == 0){
+    }else if((perfCount % perfLevel) == 0 ){
         points.push({x:e.offsetX,y:e.offsetY});
         p1 = origin;
         p2 = points[0];
@@ -211,6 +228,7 @@ temp.onmousemove = function(e){
             p2 = points[i+1];
         }
         temp.innerHTML = tag+path+'"/>';
+        perfLevelCount++;
     }
     perfCount++;
 
@@ -218,26 +236,28 @@ temp.onmousemove = function(e){
 
 
 document.body.addEventListener("wheel",function(e){
-    e.preventDefault();
-    if(e.ctrlKey){
-        let bx = (e.clientX - tf.x) / tf.zoom;
-        let by = (e.clientY - tf.y) / tf.zoom;
-    
-        if(e.deltaY < 0){
-            zoomIn();
+    if(e.target.classList.contains("scrollable")){
+        e.preventDefault();
+        if(e.ctrlKey){
+            let bx = (e.clientX - tf.x) / tf.zoom;
+            let by = (e.clientY - tf.y) / tf.zoom;
+        
+            if(e.deltaY < 0){
+                zoomIn();
+            }else{
+                zoomOut();  
+            }
+        
+            tf.x = e.clientX - (bx * tf.zoom);
+            tf.y = e.clientY - (by * tf.zoom);
+        
+            updateZoom();
         }else{
-            zoomOut();  
+            tf.y -= e.deltaY;
         }
-    
-        tf.x = e.clientX - (bx * tf.zoom);
-        tf.y = e.clientY - (by * tf.zoom);
-    
-        updateZoom();
-    }else{
-        tf.y -= e.deltaY;
+        
+        setTransform();
     }
-    
-    setTransform();
 
 }, {passive:false});
 
@@ -265,8 +285,7 @@ function zoomOut(){
 var panOrigin = null;
 var pan = false;
 function startPan(e){
-    console.log("OPAN");
-    if(e.buttons == 4){
+    if(e.buttons == 4 && (e.target.classList.contains("panable"))){
         e.preventDefault();
         panOrigin = {
             x: e.clientX, 
@@ -435,26 +454,39 @@ function changeMode(md){
         tools[i].classList.remove("active");
     }
 
+    Array.from(document.querySelectorAll(".ioBox.open")).forEach(div =>{
+        div.classList.remove("open");
+    });
+
     did("canvas").classList.remove("onfront");
-    // did("colorbar").classList.remove("open");
-    // did("toolbar").classList.remove("open");
     did("md"+md).classList.add("active");
-    if(md != 3){
-        //openMenu(0);
-
-    }
-
 
     switch (md) {
         case 0:
+            // gomme
             did("canvas").classList.add("onfront");
             break;
         case 1:
+            // crayon
             // did("toolbar").classList.add("open");
             break;
         case 2:
+            // remplissage
             did("canvas").classList.add("onfront");
             // did("colorbar").classList.add("open");
+            break;
+        case 3:
+            // ouvrir
+            openLoad();
+
+            break;
+        case 4:
+            // export
+            openExport();
+            break;
+        case 5:
+            // options
+            openOption();
             break;
     }
 
@@ -535,19 +567,26 @@ function save(e){
         openExport();
     }
 }
-function load(e){
+function loadRemoteFile(e){
 
     var fs = e.target.files;
-    did("filename").value = fs[0].name.split(".")[0];
-    var fr = new FileReader();
-
-    fr.readAsText(fs[0]);
-    fr.onload = function(e){
-      tempLoad = e.target.result;
-      did("files").classList.add("ok");
-      did("btnLoad").classList.remove("sealbtn");
-    };
-    localStorage.removeItem("sk_autosave");
+    if(fs.length > 0){
+        did("filename").value = fs[0].name.split(".")[0];
+        var fr = new FileReader();
+    
+        fr.readAsText(fs[0]);
+        fr.onload = function(e){
+            tempLoad = e.target.result;
+            qs(".fileLoader").classList.add("ok");
+            qs(".fileLoader").innerHTML = "Fichier prêt";
+            Array.from(qs('.loadButtons').children).forEach(n => {
+                if(n.classList.contains("sealbtn")){
+                    n.classList.remove("sealbtn");
+                }
+            });
+        };
+        localStorage.removeItem("sk_autosave");
+    }
 
 }
 
@@ -570,6 +609,7 @@ function saveLocal(){
         })
         .then(()=>{
             displayFiles();
+            did("savelocalfilename").value = "";
             did("sindic").classList.add("visible");
             setTimeout(()=>{
                 did("sindic").classList.remove("visible");
@@ -604,9 +644,21 @@ function saveOverwrite(){
 }
 
 function loadFromLocal(){
-    db.files.get(currentSaveFile).then(data =>{
-        did('canvas').innerHTML = uncompress(data.content);
-    });
+    if(tempLoad != ""){
+        did('canvas').innerHTML = uncompress(tempLoad);
+        tempLoad = "";
+        qs(".fileLoader").classList.remove("ok");
+        qs(".fileLoader").innerHTML = "Ouvrir un fichier .skt";
+        Array.from(qs('.loadButtons').children).forEach(n => {
+            if(n.classList.contains("sealable")){
+                n.classList.add("sealbtn");
+            }
+        });
+    }else{
+        db.files.get(currentSaveFile).then(data =>{
+            did('canvas').innerHTML = uncompress(data.content);
+        });
+    }
 }
 
 function deleteLocalSave(){
@@ -621,66 +673,59 @@ function deleteLocalSave(){
 }
 
 
-function openMenu(act){
-    if(act == 1){
-        if(did("menuBox").classList.contains("open")){
-            did("md3").classList.remove("active");
-            did("menuBox").classList.remove("open");
-        }else{
-            did("menuBox").classList.add("open");
-        }
-    }else{
-        did("menuBox").classList.remove("open");
-        did("md3").classList.remove("active");
-    }
-}
+// function openMenu(act){
+//     if(act == 1){
+//         if(did("menuBox").classList.contains("open")){
+//             did("md3").classList.remove("active");
+//             did("menuBox").classList.remove("open");
+//         }else{
+//             did("menuBox").classList.add("open");
+//         }
+//     }else{
+//         did("menuBox").classList.remove("open");
+//         did("md3").classList.remove("active");
+//     }
+// }
 
 function openExport(){
-    //openMenu(0);
     if(did("saveBox").classList.contains("open")){
         did("saveBox").classList.remove("open");
+        changeMode(1);
     }else{
         preview();
         did("saveBox").classList.add("open");
     }
 }
 function openLoad(){
-    // did("files").classList.remove("ok");
-    changeMode(0);
-    //openMenu(0);
     if(did("loadBox").classList.contains("open")){
         did("loadBox").classList.remove("open");
+        changeMode(1);
     }else{
         did("loadBox").classList.add("open");
     }
 }
 function openOption(){
-    //openMenu(0);
     if(did("optionBox").classList.contains("open")){
         did("optionBox").classList.remove("open");
+        changeMode(1);
     }else{
         did("optionBox").classList.add("open");
     }
 }
 
-function confirmLoad(){
-    did('canvas').innerHTML = uncompress(tempLoad);
-    did("btnLoad").classList.add("sealbtn");
-    tempLoad = "";
-}
-
 function showHelp(){
     if(did("help").classList.contains("active")){
         did("help").classList.remove("active");
+        did("helptool").classList.remove("active");
     }else{
         did("help").classList.add("active");
+        did("helptool").classList.add("active");
     }
 }
 
 window.addEventListener("unload",autosave);
 
 function autosave(){
-    //openMenu(0);
     var value = did("canvas").innerHTML;
     if(value != ""){
         var packValue = compress(value);
@@ -693,7 +738,6 @@ function autosave(){
 }
 
 function loadAutosave(){
-    //openMenu(0);
     var packValue = localStorage.getItem("sk_autosave");
 
     if(packValue != null){

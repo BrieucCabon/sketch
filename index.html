@@ -20,8 +20,9 @@
 <body onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()">
     <!-- onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()" -->
     <a id="dl" download style="display:none"></a>
-    <svg id="canvas"></svg>
-    <svg id="temp"></svg>
+    <div class="background panable scrollable"></div>
+    <svg id="canvas" class="panable scrollable"></svg>
+    <svg id="temp" class="panable scrollable"></svg>
     
 
     <div class="typeLogo">
@@ -32,27 +33,22 @@
 
     <span class="title">Sketch</span>
 
-    <!-- <div class="menubar">
-        <div class="menu-item" onclick="openExport()">Sauvegarder</div>
-        <div class="menu-item" onclick="openLoad()">Charger</div>
-        <div class="menu-item" onclick="openOption()">Options</div>
-    </div> -->
 
     <div class="toolbar toolbar_top">
         <span class="title">Sketch</span>
 
         <div class="separator"></div>
 
-        <div class="tool" onclick="openLoad()" title="Ouvrir / sauvegarder">
+        <div class="tool toolcls" id="md3" onclick="changeMode(3)" title="Ouvrir / sauvegarder">
             <i class="material-symbols-rounded">folder</i>
         </div>
-        <div class="tool" onclick="openExport()" title="Exporter">
+        <div class="tool toolcls" id="md4" onclick="changeMode(4)" title="Exporter">
             <i class="material-symbols-rounded">file_upload</i>
         </div>
-        <div class="tool" onclick="openOption()" title="Sauvegarde">
+        <div class="tool toolcls" id="md5" onclick="changeMode(5)" title="Options">
             <i class="material-symbols-rounded">settings</i>
         </div>
-        <div class="tool" onclick="showHelp()" title="Sauvegarde">
+        <div class="tool" id="helptool" onclick="showHelp()" title="Sauvegarde">
             <i class="material-symbols-rounded">help</i>
         </div>
 
@@ -62,7 +58,6 @@
         <div class="toolcls tool active" id="md1" onclick="changeMode(1)" title="Crayon"><i class="material-symbols-rounded">mode_edit</i></div>
         <div class="toolcls tool" id="md0" onclick="changeMode(0)" title="Gomme"><i class="material-symbols-rounded">gradient</i></div>
         <div class="toolcls tool" id="md2" onclick="changeMode(2)" title="Remplissage"><i class="material-symbols-rounded">format_color_fill</i></div>
-        <!-- <div class="tool" id="md2" onclick="changeMode(2)"><i class="material-symbols-rounded" id="palette">color_lens</i></div> -->
 
         <div class="separator"></div>
 
@@ -73,12 +68,10 @@
                 <div id="zoomLabel">100%</div>
             </div>
             <div class="pointer" onclick='zoomIn()'><i class="material-symbols-rounded">add</i></div>
-            <!-- <div class="pointer" onclick='showHelp()'><i class="material-symbols-rounded">help_outline</i></div> -->
         </div>
     </div>
 
     <div class="toolbar toolbar_left">
-        <!-- <div class="tool" id="md3" onclick="changeMode(3);openMenu(1)"><i class="material-symbols-rounded">menu</i></div> -->
 
         <div class="tool" id="size1" onclick="changeSize(1,2)" title="Diamètre">
             <i class="material-symbols-rounded" style="font-size: 12px">circle</i>
@@ -126,16 +119,6 @@
 
     </div>
     
-    
-
-    <!-- <div id="menuBox">
-        <div class="menu-title">Menu</div>
-        <div class="menu-item" onclick="openExport()"><i class="material-symbols-rounded">download</i> Sauvegarder</div>
-        <div class="menu-item" onclick="openLoad()"><i class="material-symbols-rounded">file_upload</i> Charger</div>
-        <div class="menu-item" onclick="openOption()"><i class="material-symbols-rounded">settings</i> Options</div>
-        <div class="menu-item" onclick="showHelp()"><i class="material-symbols-rounded">help</i> Aide</div>
-    </div> -->
-
     <div class="help" id="help">
         <div class="menu-title">Aide</div>
 
@@ -226,22 +209,14 @@
             <div class="closebtn" onclick="openLoad()"><i class="material-symbols-rounded">close</i></div>
         </div>
         <div class="ioBox-content">
-            <!-- <div class="filename_div">Sélectionner un fichier</div>
-            <input class="" type="file" id="files" name="files[]" value="" onchange="load(event)"><br />
-            <div class="btn sealbtn" id="btnLoad" onclick="openLoad();confirmLoad()">Charger</div>
-            <hr>
-            <div class="filename_div">Charger la sauvegarde auto</div>
-            <div class="btn" onclick="loadAutosave()">Charger</div> -->
-
             <div class="filename_div">Sauvegarder dans le stockage local</div>
             <div class="saveButtons">
                 <input class="textbox" type="text" id="savelocalfilename" value="" placeholder="Nom du fichier">    
                 <div class="btn" onclick="saveLocal()">Sauvegarder</div>
             </div>
             
-            <br>
-            <div class="separator horizon"></div>
-            <br>
+            <div class="separator horizon my-1"></div>
+
             <div class="filename_div">Charger depuis le stockage local</div>
             <div class="listFiles">
                 <div class="file header">
@@ -251,15 +226,17 @@
                 </div>
                 <div id="fileSpawn">
 
-                    <div class="file">
-                        <input type="radio" name="files" onclick="selectSaveFile()" value="[ID]">
-                        <div class="filename">[NAME]</div>
-                        <div>[SIZE]</div>
-                        <div>[DATE]</div>
-                    </div>
-
                 </div>
             </div>
+
+            <div class="separator horizon my-1"></div>
+
+            <div class="filename_div">Charger depuis un fichier</div>
+            <div class="remoteFileLoader">
+                <div class="fileLoader">Ouvrir un fichier .skt</div>
+                <input class="" type="file" id="files" name="files[]" value="" onchange="loadRemoteFile(event)">
+            </div>
+
 
             <div class="loadButtons">
                 <div class="btn" onclick="confirmAction('confirmAutosave')">Charger autosave</div>
@@ -281,11 +258,12 @@
             <div class="filename_div">Police</div>
             <select name="savetype" id="savetype" onchange="changePolice(this)">
                 <option value="Permanent marker">Permanent Marker (Défaut)</option>
-                <option value="monospace">Monospace (standard)</option>
-                <option value="cursive">Cursive (standard)</option>
-                <option value="sans-serif">Sans serif (standard)</option>
-                <option value="serif">Serif (standard)</option>
-                <option value="fantasy">Fantasy (standard)</option>
+                <option value="monospace">Monospace</option>
+                <option value="cursive">Cursive</option>
+                <option value="sans-serif">Sans serif</option>
+                <option value="serif">Serif</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="system-ui">Système</option>
             </select>
 
             <div class="filename_div">Mode nuit</div>
@@ -297,10 +275,12 @@
     </div>
 
     <div id="confirmBox">
-        <div class="confirm_text">Etes-vous sûr ?</div>
-        <div class="confirmButton">
-            <div class="btn cancel" onclick="cancelConfirm()">Annuler</div>
-            <div class="btn exec" onclick="execConfirm()">Confirmer</div>
+        <div class="confirmBoxInner">
+            <div class="confirm_text">Etes-vous sûr ?</div>
+            <div class="confirmButton">
+                <div class="btn cancel" onclick="cancelConfirm()">Annuler</div>
+                <div class="btn exec" onclick="execConfirm()">Confirmer</div>
+            </div>
         </div>
     </div>
 
