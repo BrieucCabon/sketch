@@ -3,22 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>Sketch</title>
-    <link rel="shortcut icon" href="ico.png">
+    <link rel="shortcut icon" href="icon.png">
     <link rel="stylesheet" href="styles/style.css">
     <script defer src="scripts/utils.js" charset="utf-8"></script>
     <script defer src="scripts/template.js" charset="utf-8"></script>
     <script defer src="scripts/fivedb.js" charset="utf-8"></script>
     <script defer src="scripts/classes.js" charset="utf-8"></script>
     <script defer src="scripts/script.js" charset="utf-8"></script>
-    <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
-    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,1,0" /> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
 </head>
 <body onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()">
-    <!-- onmousedown="startPan(event)" onmousemove="movePan(event)" onmouseup="stopPan()" -->
     <a id="dl" download style="display:none"></a>
     <div class="background panable scrollable"></div>
     <svg id="canvas" class="panable scrollable"></svg>
@@ -35,7 +31,7 @@
 
 
     <div class="toolbar toolbar_top">
-        <span class="title">Sketch</span>
+        <img src="logo.png" height="32px">
 
         <div class="separator"></div>
 
@@ -188,10 +184,6 @@
                     <div id="jpg_option" class="saveoption">
                         Pas d'options
                     </div>
-                    <!-- <div id="jpg_option"></div> -->
-                    <!-- <input type="radio" name="savetype" value="skt">Sketch
-                    <input type="radio" name="savetype" value="svg">SVG
-                    <input type="radio" name="savetype" value="png">PNG -->
                 </div>
                 <br />
                 <div class="btn" onclick="save();">Télécharger</div>

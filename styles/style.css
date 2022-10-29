@@ -86,7 +86,7 @@ text:hover {
     stroke: grey;
 }
 
-.title {
+/* .title {
     font-family: damion;
     font-size: 32px;
     color: var(--primary);
@@ -94,7 +94,7 @@ text:hover {
     pointer-events: none;
     z-index: 5;
     padding-right: 5px;
-}
+} */
 
 @keyframes fadeColor {
     0% {

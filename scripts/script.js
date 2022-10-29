@@ -131,7 +131,7 @@ temp.onmouseup = function(e){
         }
         temp.innerHTML ="";
         points = [];
-        console.log(perfLevelCount);
+        // console.log(perfLevelCount);
     }
 };
 
@@ -380,7 +380,11 @@ document.body.onkeydown = function(e){
     if(e.keyCode == 18 && !isCircle){ isCircle = true; }
 
     // CTRL + Z
-    if(e.keyCode == 90 && e.ctrlKey){ canvas.children[canvas.children.length-1].remove(); }
+    if(e.keyCode == 90 && e.ctrlKey){ 
+        if(canvas.children.length > 0){
+            canvas.children[canvas.children.length-1].remove();
+        }
+    }
 
     // CTRL + S
     if(e.keyCode == 83 && e.ctrlKey){ e.preventDefault(); autosave(); }
@@ -404,7 +408,7 @@ document.body.onkeydown = function(e){
         if(tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y){
             tempText.innerHTML += e.key;
         }else{
-            var txt = new Text(mouse.x,(mouse.y+10)).pa;
+            var txt = new Text(mouse.x,(mouse.y+13)).pa;
 
             tempText = txt;
             tempTextMouse = mouse;
@@ -412,8 +416,20 @@ document.body.onkeydown = function(e){
             txt.innerHTML = e.key;
             canvas.appendChild(txt);
         }
-
     }
+
+    // Entrer
+    if(e.keyCode == 13){
+        var txt = new Text(mouse.x,(mouse.y+55)).pa;
+
+        tempText = txt;
+        mouse.y = mouse.y + 42;
+        tempTextMouse = mouse;
+
+        txt.innerHTML = "";
+        canvas.appendChild(txt);
+    }
+
     // Espace
     if(e.keyCode == 32 && (tempTextMouse.x == mouse.x && tempTextMouse.y == mouse.y) && options.mode == 1){
         tempText.innerHTML += e.key;
