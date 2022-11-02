@@ -1013,3 +1013,6 @@ function selectSaveFile(id){
     }
     currentSaveFile = id;
 }
+
+// Avoid stockage being deleted when HDD space is limited
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
