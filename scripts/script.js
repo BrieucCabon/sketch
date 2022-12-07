@@ -147,6 +147,8 @@ temp.onmousemove = function(e){
     mouse = { x:e.offsetX , y:e.offsetY };
     tempMouse = e;
     if (!canDraw) return;
+    // Avoid "dot" shape or focus click dot
+    if(origin.x == mouse.x && origin.y == mouse.y) return;
     var midP;
     var tag = "";
     if(isDash){
